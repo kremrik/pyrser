@@ -1,32 +1,19 @@
 from utils.algos import xfs
-from Node import PyNode, DirNode
+from Node import DirNode, FileNode, FncNode
 
 
 if __name__ == "__main__":
-    directory = DirNode("/path/to", "to")
+    dirnode = DirNode("./test_files", "test_files")
 
-    node = PyNode("/path/to/file.py", "file")
-    node.name = "_module_"
-    node.scope = [1, 12]
+    filenode = FileNode("./test_files/test1.py", "test1.py")
+    filenode.scope = [1, 3]
 
-    fnc1 = PyNode("/path/to/file.py", "function1")
-    fnc1.scope = [1, 2]
+    fncnode = FncNode("./test_files/test1.py", "test")
+    fncnode.scope = [1, 2]
 
-    fnc2 = PyNode("/path/to/file.py", "function2")
-    fnc2.scope = [5, 6]
+    dirnode.add_child(filenode)
+    filenode.add_child(fncnode)
 
-    fnc3 = PyNode("/path/to/file.py", "function3")
-    fnc3.scope = [9, 11]
-
-    fnc3_5 = PyNode("/path/to/file.py", "function3_5")
-    fnc3_5.scope = [10, 11]
-
-    fnc3.add_child(fnc3_5)
-    node.add_child(fnc1)
-    node.add_child(fnc2)
-    node.add_child(fnc3)
-    directory.add_child(node)
-
-    res = xfs(directory, "function3_5")
+    res = xfs(dirnode, tgt_nm="test", tgt_typ=FncNode)
     print(res)
     print(res.scope)
