@@ -5,10 +5,10 @@ class Node(object):
         self.name = name
         self.children = {}
 
-    def add_child(self, child: "Node") -> None:
+    def add_child(self, child: Node) -> None:
         self.children[child.name] = child
 
-    def get_child(self, name: str) -> "Node":
+    def get_child(self, name: str) -> Node:
         return self.children[name]
 
     def __str__(self):
@@ -35,10 +35,21 @@ class DirNode(Node):
         super().__init__(location, name)
 
 
-class PyNode(Node):
+class FileNode(Node):
+
+    def __init__(self, location, name):
+        super().__init__(location, name)
+        self.scope = None
+
+
+class ClsNode(Node):
 
     def __init__(self, location, name):
         super().__init__(location, name)
 
-        self.scope = None
-        self.calls = None
+
+class FncNode(Node):
+
+    def __init__(self, location, name):
+        super().__init__(location, name)
+        self.calls = []
