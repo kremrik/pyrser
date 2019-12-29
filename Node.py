@@ -42,13 +42,13 @@ class FileNode(Node):
         self.scope = None
 
 
-class ClsNode(Node):
+class ClsNode(FileNode):
 
     def __init__(self, location, name):
         super().__init__(location, name)
 
 
-class FncNode(Node):
+class FncNode(FileNode):
 
     def __init__(self, location, name):
         super().__init__(location, name)

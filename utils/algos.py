@@ -1,8 +1,7 @@
 from Node import Node
 
 
-def xfs(node: Node, tgt_nm: str, tgt_typ: Node, search_type: str = "dfs") -> Node:
-    # TODO: search by passing a Node instance or by passing name/type?
+def xfs(node: Node, tgt_nm: str, tgt_file: str, search_type: str = "dfs") -> Node:
     # TODO: should implement __hash__ for Node so we can use a set
     visited = []  
     stack = [node]
@@ -14,7 +13,7 @@ def xfs(node: Node, tgt_nm: str, tgt_typ: Node, search_type: str = "dfs") -> Nod
     while stack:
         vertex = stack.pop()
 
-        if vertex.name == tgt_nm and type(vertex) == tgt_typ:
+        if vertex.name == tgt_nm and vertex.location == tgt_file:
             return vertex
 
         if vertex not in visited:

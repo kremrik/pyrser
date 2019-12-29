@@ -5,7 +5,7 @@ from Node import DirNode, FileNode, FncNode
 if __name__ == "__main__":
     dirnode = DirNode("./test_files", "test_files")
 
-    filenode = FileNode("./test_files/test1.py", "test1.py")
+    filenode = FileNode("./test_files/test1.py", "test1")
     filenode.scope = [1, 3]
 
     fncnode = FncNode("./test_files/test1.py", "test")
@@ -14,6 +14,6 @@ if __name__ == "__main__":
     dirnode.add_child(filenode)
     filenode.add_child(fncnode)
 
-    res = xfs(dirnode, tgt_nm="test", tgt_typ=FncNode)
+    res = xfs(dirnode, tgt_nm="test", tgt_file="./test_files/test1.py")
     print(res)
     print(res.scope)
