@@ -9,17 +9,23 @@ from Node import DirNode, FileNode, ClsNode, FncNode
 import unittest
 
 
+def printer(*x):
+    print("\n\n>>> OUTPUT <<<")
+    print(*x, sep="\n")
+    print()
+
+
 class test_pyrser(unittest.TestCase):
 
     def test1(self):
         fncnode = FncNode("/home/kemri/Projects/pyrser/test_files/test1.py", "test")
-        fncnode.scope = [1, 2]
+        fncnode.scope = [1, 3]
         gold = fncnode
 
         test_file = "/home/kemri/Projects/pyrser/test_files/test1.py"
         output = pyrser(test_file)
 
-        print(output, output.scope)
+        printer(output, output.scope)
         self.assertEqual(gold, output)
 
 

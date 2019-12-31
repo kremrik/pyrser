@@ -35,7 +35,7 @@ def run(filename: str, lines: list, length: int, place: int = 0, level: int = 0)
         node = FncNode(filename, fnc_name)
         scope_bgn = place
 
-    scope_end = place - 1
+    scope_end = place
     node.scope = [scope_bgn, scope_end]
 
     return node
