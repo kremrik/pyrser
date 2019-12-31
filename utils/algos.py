@@ -1,4 +1,5 @@
 from Node import Node
+from collections import deque
 
 
 def xfs(node: Node, tgt_nm: str, tgt_file: str, search_type: str = "dfs") -> Node:
@@ -7,7 +8,6 @@ def xfs(node: Node, tgt_nm: str, tgt_file: str, search_type: str = "dfs") -> Nod
     stack = [node]
 
     if search_type == "bfs":
-        from collections import deque
         stack = deque([node])
 
     while stack:
