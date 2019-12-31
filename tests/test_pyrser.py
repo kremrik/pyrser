@@ -18,14 +18,21 @@ def printer(*x):
 class test_pyrser(unittest.TestCase):
 
     def test1(self):
-        fncnode = FncNode("/home/kemri/Projects/pyrser/test_files/test1.py", "test")
-        fncnode.scope = [1, 3]
-        gold = fncnode
-
         test_file = "/home/kemri/Projects/pyrser/test_files/test1.py"
+
+        filenode = FileNode(test_file, "test1.py")
+        filenode.scope = [1, 3]
+
+        fncnode = FncNode(test_file, "test")
+        fncnode.scope = [1, 3]
+
+        filenode.add_child(fncnode)
+
+        gold = filenode
+
         output = pyrser(test_file)
 
-        printer(output, output.scope)
+        printer(output, output.scope, output.children)
         self.assertEqual(gold, output)
 
 

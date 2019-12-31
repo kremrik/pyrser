@@ -1,22 +1,34 @@
 from Node import Node, DirNode, FileNode, ClsNode, FncNode
 from utils.file_utils import reader
 from utils.regex import get_fnc_name
+import ntpath
 
 
 name = "/home/kemri/Projects/pyrser/test_files/test1.py"
 
 
 def pyrser(path: str) -> Node:
-    lines = reader(path)
-    length = len(lines) - 1
-    output = run(name, lines, length)
+    if is_file(path):
+        name = ntpath.basename(path)
+        filenode = FileNode(path, name)
 
-    return output
+        lines = reader(path)
+        length = len(lines) - 1
+        obj_node = file_parser(path, lines, length)
+
+        print("LENGTH: {}".format(len(lines)))
+        filenode.scope = [1, len(lines)]
+        filenode.add_child(obj_node)
+
+        return filenode
 
 
-def run(filename: str, lines: list, length: int, place: int = 0, level: int = 0) -> Node:
-    """POC version of Pyrser that only works on a single file"""
+def is_file(path: str) -> bool:
+    # https://stackoverflow.com/questions/8384737/extract-file-name-from-path-no-matter-what-the-os-path-format
+    return ntpath.isfile(path)
 
+
+def file_parser(filename: str, lines: list, length: int, place: int = 0, level: int = 0) -> Node:
     node = None
     scope_bgn = None
     scope_end = None
