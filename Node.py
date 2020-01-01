@@ -42,6 +42,13 @@ class FileNode(Node):
     def __init__(self, location, name):
         super().__init__(location, name)
         self.scope = None
+    
+    def __eq__(self, other):
+        # TODO: can't compare parent due to recursive loop
+        return self.location == other.location and \
+            self.name == other.name and \
+            self.children == other.children and \
+            self.scope == other.scope
 
 
 class ClsNode(FileNode):
