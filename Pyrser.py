@@ -4,9 +4,6 @@ from utils.regex import get_fnc_name
 import ntpath
 
 
-name = "/home/kemri/Projects/pyrser/test_files/test1.py"
-
-
 def pyrser(path: str) -> Node:
     if is_file(path):
         name = ntpath.basename(path)
@@ -14,9 +11,9 @@ def pyrser(path: str) -> Node:
 
         lines = reader(path)
         length = len(lines) - 1
-        output = file_parser(filenode_seed, lines, length)
+        output = file_parser(FileNode, path, name, lines, length)
 
-        output.scope = [1, len(lines)]
+        # output.scope = [1, len(lines)]
 
         return output
 
@@ -26,12 +23,12 @@ def is_file(path: str) -> bool:
     return ntpath.isfile(path)
 
 
-def file_parser(filenode: FileNode, lines: list, length: int, place: int = 0, level: int = 0) -> Node:
+def file_parser(node: Node, location: str, name: str, lines: list, length: int, place: int = 0, level: int = 0) -> Node:
     # NOTE: level param is a measure of nesting to remain 0 in cases other than class methods
     # or nested functions (indicating a recursive call)
 
+    node = node(location, name)
     new_node = None
-    filename = filenode.location
     scope_bgn = None
     scope_end = None
 
@@ -52,7 +49,7 @@ def file_parser(filenode: FileNode, lines: list, length: int, place: int = 0, le
         if next_line is None or next_level <= level:  # short-circuit eval, 2nd expr can throw exception
             scope_end = place
             new_node.scope = [scope_bgn, scope_end]
-            filenode.add_child(new_node)
+            node.add_child(new_node)
             continue
 
         # SKIP LINE LOGIC
@@ -65,10 +62,12 @@ def file_parser(filenode: FileNode, lines: list, length: int, place: int = 0, le
         # else, this line is a function so set the begin scope and make a new fnc_node
         if this_level == level:
             scope_bgn = place
-            new_node = FncNode(filename, fnc_name)
-            new_node.parent = filenode
+            new_node = FncNode(location, fnc_name)
+            new_node.parent = node
         elif this_level > level:
+            # need to add a child node to the new_node that has to already exist
             pass
 
     # once there are no more lines, we're done
-    return filenode
+    node.scope = [1, len(lines) or 1]
+    return node

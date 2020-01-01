@@ -18,6 +18,17 @@ def printer(*x):
 
 class test_pyrser(unittest.TestCase):
 
+    def test0(self):
+        test_file = "/home/kemri/Projects/pyrser/test_files/test0.py"
+        
+        filenode = FileNode(test_file, "test0.py")
+        filenode.scope = [1, 1]
+        gold = filenode
+
+        output = pyrser(test_file)
+        
+        self.assertEqual(gold, output)
+
     def test1(self):
         test_file = "/home/kemri/Projects/pyrser/test_files/test1.py"
 
