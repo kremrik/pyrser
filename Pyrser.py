@@ -26,7 +26,10 @@ def is_file(path: str) -> bool:
     return ntpath.isfile(path)
 
 
-def file_parser(filenode: FileNode, lines: list, length: int, place: int = 0) -> Node:
+def file_parser(filenode: FileNode, lines: list, length: int, place: int = 0, level: int = 0) -> Node:
+    # NOTE: level param is a measure of nesting to remain 0 in cases other than class methods
+    # or nested functions (indicating a recursive call)
+
     new_node = None
     filename = filenode.location
     scope_bgn = None
@@ -46,7 +49,7 @@ def file_parser(filenode: FileNode, lines: list, length: int, place: int = 0) ->
         # if the line after this is a function, we need to set the end scope for the function,
         # add the fnc_node as a child of the file_node, and then move to the next line
         next_line_fnc = get_fnc_name(next_line)
-        if next_line is None or next_level <= this_level:  # short-circuit eval, 2nd expr can throw exception
+        if next_line is None or next_level <= level:  # short-circuit eval, 2nd expr can throw exception
             scope_end = place
             new_node.scope = [scope_bgn, scope_end]
             filenode.add_child(new_node)
@@ -60,10 +63,12 @@ def file_parser(filenode: FileNode, lines: list, length: int, place: int = 0) ->
 
         # CREATE NODE LOGIC
         # else, this line is a function so set the begin scope and make a new fnc_node
-        
-        scope_bgn = place
-        new_node = FncNode(filename, fnc_name)
-        new_node.parent = filenode
+        if this_level == level:
+            scope_bgn = place
+            new_node = FncNode(filename, fnc_name)
+            new_node.parent = filenode
+        elif this_level > level:
+            pass
 
     # once there are no more lines, we're done
     return filenode
