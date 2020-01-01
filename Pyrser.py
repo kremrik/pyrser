@@ -55,6 +55,7 @@ def file_parser(filenode: FileNode, lines: list, length: int, place: int = 0, le
         # else, this line is a function so set the begin scope and make a new fnc_node
         scope_bgn = place
         new_node = FncNode(filename, fnc_name)
+        new_node.parent = filenode
 
     # once there are no more lines, we're done
     return filenode
