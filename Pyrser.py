@@ -26,6 +26,8 @@ def is_file(path: str) -> bool:
 place = 0
 
 def file_parser(node: Node, location: str, name: str, lines: list, length: int, level: int = 0) -> Node:
+    # TODO: handle `scope` attribute
+
     global place
 
     node = node(location, name)
@@ -47,7 +49,9 @@ def file_parser(node: Node, location: str, name: str, lines: list, length: int, 
         if (next_level <= level and next_is_fnc) or next_line is None:
             return node
         elif this_is_fnc:
-            node.add_child(file_parser(FncNode, location, this_is_fnc, lines, length, level+1))
+            child = file_parser(FncNode, location, this_is_fnc, lines, length, level+1)
+            child.parent = node
+            node.add_child(child)
         else:
             continue
 

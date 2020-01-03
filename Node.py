@@ -25,7 +25,7 @@ class Node(object):
         cls_nm = type(self).__name__
         name = self.name
         loc = self.location
-        par = self.parent
+        par = str(self.parent)[:20] + "...)"
         has_chld = bool(self.children)
 
         return f"{cls_nm}(name='{name}', location='{loc}', parent={par}, children='{has_chld}')"
