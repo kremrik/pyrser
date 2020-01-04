@@ -28,6 +28,13 @@ class Node(object):
         return f"{cls_nm}(name='{name}', location='{loc}')"
 
     def __repr__(self):
+        """
+        TODO: output can look weird when doing normal things, may want to add dict-like method:
+        >>> list(output.children.values())
+        [FncNode(name='test', location='/home/kemri/Projects/pyrser/test_files/test3.py'),
+         FncNode(name='test2', location='/home/kemri/Projects/pyrser/test_files/test3.py')
+          |-- FncNode(name='test2_1', location='/home/kemri/Projects/pyrser/test_files/test3.py')]
+        """
         return dfs_printer(self)
 
 

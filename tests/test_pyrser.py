@@ -63,10 +63,10 @@ class test_pyrser(unittest.TestCase):
         gold = filenode
 
         output = pyrser(test_file)
+        # printer(repr(output), repr(gold))
         
         self.assertEqual(gold, output)
 
-    @unittest.skip("working on 1 and 2")
     def test3(self):
         test_file = "/home/kemri/Projects/pyrser/test_files/test3.py"
 
@@ -91,8 +91,6 @@ class test_pyrser(unittest.TestCase):
         gold = filenode
 
         output = pyrser(test_file)
-        print()
-        xfs(output)
         
         self.assertEqual(gold, output)
 

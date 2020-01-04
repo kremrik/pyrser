@@ -4,7 +4,14 @@ from utils.regex import get_fnc_name
 import ntpath
 
 
+# TODO: find a way to avoid this...
+place = 0
+
+
 def pyrser(path: str) -> Node:
+    global place
+    place = 0
+
     if is_file(path):
         name = ntpath.basename(path)
         filenode_seed = FileNode(path, name)
@@ -23,17 +30,14 @@ def is_file(path: str) -> bool:
     return ntpath.isfile(path)
 
 
-place = 0
-
 def file_parser(node: Node, location: str, name: str, lines: list, length: int, level: int = 0) -> Node:
-    # TODO: handle `scope` attribute
+    # TODO: lots of phrases like "x = x if y > z else n"
 
     global place
 
     node = node(location, name)
     new_node = None
-    scope_bgn = None
-    scope_end = None
+    scope_bgn = place if place > 0 else 1
 
     while place <= length:
         this_line = lines[place]
@@ -47,6 +51,7 @@ def file_parser(node: Node, location: str, name: str, lines: list, length: int, 
         place += 1
 
         if (next_level <= level and next_is_fnc) or next_line is None:
+            node.scope = [scope_bgn, place]
             return node
         elif this_is_fnc:
             child = file_parser(FncNode, location, this_is_fnc, lines, length, level+1)
@@ -54,5 +59,6 @@ def file_parser(node: Node, location: str, name: str, lines: list, length: int, 
             node.add_child(child)
         else:
             continue
-
+    
+    node.scope = [scope_bgn, place or 1]
     return node
