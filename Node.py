@@ -1,3 +1,6 @@
+from utils.algos import dfs_printer
+
+
 class Node(object):
 
     def __init__(self, location: str, name: str):
@@ -9,26 +12,23 @@ class Node(object):
     def add_child(self, child: "Node") -> None:
         self.children[child.name] = child
 
-    def __str__(self):
-        return self._pretty_print()
-
-    def __repr__(self):
-        return self._pretty_print()
-
     def __eq__(self, other):
         # TODO: can't compare parent due to recursive loop
         return self.location == other.location and \
             self.name == other.name and \
             self.children == other.children
 
-    def _pretty_print(self):
+    def __str__(self):
         cls_nm = type(self).__name__
         name = self.name
         loc = self.location
         par = str(self.parent)[:20] + "...)"
         has_chld = bool(self.children)
 
-        return f"{cls_nm}(name='{name}', location='{loc}', parent={par}, children='{has_chld}')"
+        return f"{cls_nm}(name='{name}', location='{loc}')"
+
+    def __repr__(self):
+        return dfs_printer(self)
 
 
 class DirNode(Node):
