@@ -6,7 +6,6 @@ sys.path.insert(0, pwd)
 
 from Pyrser import pyrser
 from Node import DirNode, FileNode, ClsNode, FncNode
-from utils.algos import xfs
 import unittest
 
 
@@ -18,7 +17,7 @@ def printer(*x):
 
 class test_pyrser(unittest.TestCase):
 
-    def test0(self):
+    def test_empty_file(self):
         test_file = "/home/kemri/Projects/pyrser/test_files/test0.py"
         
         filenode = FileNode(test_file, "test0.py")
@@ -29,7 +28,7 @@ class test_pyrser(unittest.TestCase):
         
         self.assertEqual(gold, output)
 
-    def test1(self):
+    def test_one_function(self):
         test_file = "/home/kemri/Projects/pyrser/test_files/test1.py"
 
         filenode = FileNode(test_file, "test1.py")
@@ -44,7 +43,7 @@ class test_pyrser(unittest.TestCase):
 
         self.assertEqual(gold, output)
 
-    def test2(self):
+    def test_two_functions(self):
         test_file = "/home/kemri/Projects/pyrser/test_files/test2.py"
 
         filenode = FileNode(test_file, "test2.py")
@@ -67,7 +66,7 @@ class test_pyrser(unittest.TestCase):
         
         self.assertEqual(gold, output)
 
-    def test3(self):
+    def test_nested_function_at_end(self):
         test_file = "/home/kemri/Projects/pyrser/test_files/test3.py"
 
         filenode = FileNode(test_file, "test3.py")
@@ -94,7 +93,7 @@ class test_pyrser(unittest.TestCase):
         
         self.assertEqual(gold, output)
 
-    def test4(self):
+    def test_nested_function_with_simple_after(self):
         test_file = "/home/kemri/Projects/pyrser/test_files/test4.py"
 
         filenode = FileNode(test_file, "test4.py")

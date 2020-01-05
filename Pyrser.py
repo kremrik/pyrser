@@ -1,6 +1,6 @@
 from Node import Node, DirNode, FileNode, ClsNode, FncNode
 from utils.file_utils import reader, is_file, get_file_name_from_path
-from utils.regex import get_fnc_name
+from utils.regex import get_obj_name
 
 
 place = 0  # TODO: find a way to avoid this...
@@ -31,11 +31,11 @@ def file_parser(node, location: str, name: str, lines: list, length: int, level:
 
     while place <= length:
         this_line = lines[place]
-        this_is_fnc = get_fnc_name(this_line)
+        this_is_fnc = get_obj_name(this_line)
         this_level = this_line.count(INDENT)
 
         next_line = None if place >= length else lines[place + 1]
-        next_is_fnc = None if next_line is None else get_fnc_name(next_line)
+        next_is_fnc = None if next_line is None else get_obj_name(next_line)
         next_level = level if next_is_fnc is None else next_line.count(INDENT)
 
         if next_is_fnc and next_level < level:
