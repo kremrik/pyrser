@@ -2,7 +2,7 @@ from collections import deque
 
 
 def xfs(node: "Node", tgt_nm: str = None, tgt_file: str = None, search_type: str = "dfs") -> "Node":
-    # TODO: should implement __hash__ for Node so we can use a set
+    # TODO: could implement __hash__ for Node so we can use a set
     visited = []  
     stack = deque([node]) if search_type == "bfs" else [node]
 
