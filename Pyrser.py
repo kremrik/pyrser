@@ -32,6 +32,8 @@ def is_file(path: str) -> bool:
 
 def file_parser(node: Node, location: str, name: str, lines: list, length: int, level: int = 0) -> Node:
     # TODO: lots of phrases like "x = x if y > z else n"
+    # TODO: huge bug where we can't return from more than one level of recursion at once because we're
+    #   still iterating one line at a time
 
     global place
 
@@ -48,16 +50,20 @@ def file_parser(node: Node, location: str, name: str, lines: list, length: int, 
         next_is_fnc = None if next_line is None else get_fnc_name(next_line)
         next_level = level if next_is_fnc is None else next_line.count("    ")
 
-        place += 1
-
-        if (next_level <= level and next_is_fnc) or next_line is None:
+        if next_line is None:
+            place += 1
             node.scope = [scope_bgn, place]
             return node
+        elif next_is_fnc and next_level < level:
+            node.scope = [scope_bgn, place+1]
+            return node
         elif this_is_fnc:
+            place += 1
             child = file_parser(FncNode, location, this_is_fnc, lines, length, level+1)
             child.parent = node
             node.add_child(child)
         else:
+            place += 1
             continue
     
     node.scope = [scope_bgn, place or 1]

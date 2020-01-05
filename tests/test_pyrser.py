@@ -94,6 +94,33 @@ class test_pyrser(unittest.TestCase):
         
         self.assertEqual(gold, output)
 
+    def test4(self):
+        test_file = "/home/kemri/Projects/pyrser/test_files/test4.py"
+
+        filenode = FileNode(test_file, "test4.py")
+        filenode.scope = [1, 5]
+
+        test1 = FncNode(test_file, "test1")
+        test1.scope = [1, 3]
+        test1.parent = filenode
+
+        test1_1 = FncNode(test_file, "test1_1")
+        test1_1.scope = [2, 3]
+        test1_1.parent = test1
+
+        test2 = FncNode(test_file, "test2")
+        test2.scope = [4, 5]
+        test2.parent = filenode
+
+        filenode.add_child(test1)
+        test1.add_child(test1_1)
+        filenode.add_child(test2)
+        gold = filenode
+
+        output = pyrser(test_file)
+
+        self.assertEqual(gold, output)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
