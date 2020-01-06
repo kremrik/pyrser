@@ -1,4 +1,19 @@
 from collections import deque
+import ntpath
+
+
+def reader(filepath: str) -> list:
+    with open(filepath, "r") as f:
+        lines = [line for line in f.readlines() if line != "\n"]
+    return lines
+
+
+def is_file(path: str) -> bool:
+    return ntpath.isfile(path)
+
+
+def get_file_name_from_path(path: str) -> str:
+    return ntpath.basename(path)
 
 
 def xfs(node: "Node", tgt_nm: str = None, tgt_file: str = None, search_type: str = "dfs") -> "Node":
@@ -48,3 +63,23 @@ def dfs_printer(node: "Node", level: int = 0, visited: list = None) -> None:
         output = output + dfs_printer(child, level+1, visited)
 
     return output
+
+
+def get_obj_name(line: str):
+    clean_line = line.strip()
+
+    no_def_found = not clean_line.startswith("def ")
+    no_class_found = not clean_line.startswith("class ")
+    no_colon_found = not clean_line.endswith(":")
+
+    if no_def_found and no_class_found and no_colon_found:
+        return None
+
+    strip_chars = [":"]
+    for replace_char in strip_chars:
+        clean_line = clean_line.replace(replace_char, "")
+
+    signature = clean_line.split()[1]
+    name = signature.split("(")[0]
+    
+    return name

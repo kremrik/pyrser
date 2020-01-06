@@ -1,4 +1,4 @@
-from utils.algos import dfs_printer
+from utils.helpers import dfs_printer
 
 
 class Node(object):
