@@ -62,7 +62,6 @@ class test_pyrser(unittest.TestCase):
         gold = filenode
 
         output = pyrser(test_file)
-        # printer(repr(output), repr(gold))
         
         self.assertEqual(gold, output)
 

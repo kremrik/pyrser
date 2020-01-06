@@ -28,6 +28,7 @@ def file_parser(node, location: str, name: str, lines: list, length: int, level:
     node = node(location, name)
     new_node = None
     scope_bgn = place if place > 0 else 1  # always want to start at line 1, not 0
+    in_comment = False
 
     while place <= length:
         this_line = lines[place]
@@ -38,27 +39,35 @@ def file_parser(node, location: str, name: str, lines: list, length: int, level:
         next_is_fnc = None if next_line is None else get_obj_name(next_line)
         next_level = level if next_is_fnc is None else next_line.count(INDENT)
 
+        # recursive breakout logic
         if next_is_fnc and next_level < level:
-            # if we're in a nested definition, don't increment place (ie, move to the
-            # next line) until we've returned out of enough recursive calls to make
-            # the levels equal...
             node.scope = [scope_bgn, place+1]
             return node
-        else:
-            # ... THEN once they're equal, increment place/move on to the next line
-            place += 1
+  
+        place += 1
 
+        # end-of-file logic
         if next_line is None:
             node.scope = [scope_bgn, place]
             return node
-        elif this_is_fnc:
+
+        # skip comment logic
+        if '"""' in this_line:
+            in_comment = not in_comment
+            continue
+        elif in_comment is True:
+            continue
+        elif this_line.strip().startswith("#"):
+            continue
+
+        # recurse logic
+        if this_is_fnc:
             child = file_parser(FncNode, location, this_is_fnc, lines, length, level+1)
             child.parent = node
             node.add_child(child)
-        else:
-            # something other than a definition, which we don't care about yet
-            # this is where we will add tracking for function calls, however
-            continue
+
+        # if no other conditions met, move on to the next line
+        continue
     
     node.scope = [scope_bgn, place or 1]
     return node

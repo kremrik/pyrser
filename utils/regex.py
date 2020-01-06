@@ -8,8 +8,11 @@ def get_obj_name(line: str):
     if no_def_found and no_class_found and no_colon_found:
         return None
 
-    strip_chars = ["(", ")", ":"]
+    strip_chars = [":"]
     for replace_char in strip_chars:
         clean_line = clean_line.replace(replace_char, "")
 
-    return clean_line.split()[1]
+    signature = clean_line.split()[1]
+    name = signature.split("(")[0]
+    
+    return name
