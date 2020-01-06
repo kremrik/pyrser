@@ -1,4 +1,4 @@
-from collections import deque
+from collections import deque, defaultdict
 import ntpath
 
 
@@ -65,7 +65,7 @@ def dfs_printer(node: "Node", level: int = 0, visited: list = None) -> None:
     return output
 
 
-def get_obj_name(line: str):
+def get_obj_name(line: str) -> str:
     clean_line = line.strip()
 
     no_def_found = not clean_line.startswith("def ")
@@ -83,3 +83,16 @@ def get_obj_name(line: str):
     name = signature.split("(")[0]
     
     return name
+
+
+def get_obj_type(line: str):
+    obj_mappings = [
+        ("def", "function"), 
+        ("class", "class")
+        ]
+    obj_map = defaultdict(lambda: None, obj_mappings)
+
+    clean_line = line.strip()
+    first_word = clean_line.split()[0]
+
+    return obj_map[first_word]
