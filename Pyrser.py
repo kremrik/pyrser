@@ -1,6 +1,6 @@
 from Node import Node, DirNode, FileNode, ClsNode, FncNode
 # from utils.file_utils import reader, is_file, get_file_name_from_path
-from utils.helpers import reader, is_file, get_file_name_from_path, get_obj_name
+from Helpers import reader, is_file, get_file_name_from_path, get_obj_name
 
 
 place = 0  # TODO: find a way to avoid this...
