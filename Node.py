@@ -1,4 +1,4 @@
-from Helpers import dfs_printer
+from Utils.NodeHelpers import dfs_printer
 
 
 class Node(object):
