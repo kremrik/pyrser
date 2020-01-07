@@ -1,6 +1,6 @@
 from Node import Node, DirNode, FileNode, ClsNode, FncNode
 # from utils.file_utils import reader, is_file, get_file_name_from_path
-from Utils.PyrserHelpers import reader, is_file, get_file_name_from_path, get_obj_name, get_node_type
+from Utils.PyrserHelpers import reader, is_file, get_file_name_from_path, get_obj_name, get_node_type, get_next_nonempty_line
 
 
 place = 0  # TODO: find a way to avoid this...
@@ -35,7 +35,7 @@ def file_parser(node, location: str, name: str, lines: list, length: int, level:
         this_is_node = get_obj_name(this_line)
         this_level = this_line.count(INDENT)
 
-        next_line = None if place >= length else lines[place + 1]
+        next_line = None if place >= length else get_next_nonempty_line(lines, place, length)
         next_is_node = None if next_line is None else get_obj_name(next_line)
         next_level = level if next_is_node is None else next_line.count(INDENT)
 

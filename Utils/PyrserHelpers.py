@@ -5,7 +5,7 @@ import ntpath
 
 def reader(filepath: str) -> list:
     with open(filepath, "r") as f:
-        lines = [line for line in f.readlines() if line != "\n"]
+        lines =f.readlines()
     return lines
 
 
@@ -71,3 +71,18 @@ def get_node_type(line: str):
     first_word = clean_line.split()[0]
 
     return obj_map[first_word]
+
+
+def get_next_nonempty_line(lines: list, place: int, length: int) -> str:
+    place += 1
+
+    while place <= length:
+        line = lines[place]
+
+        if not line.isspace():
+            return line
+            break
+
+        place += 1
+
+    return None
