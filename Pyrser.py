@@ -40,6 +40,7 @@ def file_parser(node, location: str, name: str, lines: list, length: int, level:
         next_level = level if next_is_node is None else next_line.count(INDENT)
 
         # recursive breakout logic
+        # do not want to increment place until levels at this and next line equal
         if next_is_node and next_level < level:
             node.scope = [scope_bgn, place+1]
             return node
@@ -55,9 +56,7 @@ def file_parser(node, location: str, name: str, lines: list, length: int, level:
         if '"""' in this_line:
             in_comment = not in_comment
             continue
-        elif in_comment is True:
-            continue
-        elif this_line.strip().startswith("#"):
+        elif in_comment or this_line.strip().startswith("#"):
             continue
 
         # recurse logic

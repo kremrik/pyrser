@@ -45,9 +45,8 @@ def get_obj_name(line: str) -> str:
 
     no_def_found = not clean_line.startswith("def ")
     no_class_found = not clean_line.startswith("class ")
-    no_colon_found = not clean_line.endswith(":")
 
-    if no_def_found and no_class_found and no_colon_found:
+    if no_def_found and no_class_found:
         return None
 
     strip_chars = [":"]

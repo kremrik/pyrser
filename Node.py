@@ -60,9 +60,23 @@ class ClsNode(FileNode):
     def __init__(self, location, name):
         super().__init__(location, name)
 
+    def __str__(self):
+        cls_nm = type(self).__name__
+        name = self.name
+
+        if type(self) in (ClsNode, FncNode):
+            return f"{cls_nm}(name='{name}')"
+
 
 class FncNode(FileNode):
 
     def __init__(self, location, name):
         super().__init__(location, name)
         self.calls = []
+
+    def __str__(self):
+        cls_nm = type(self).__name__
+        name = self.name
+
+        if type(self) in (ClsNode, FncNode):
+            return f"{cls_nm}(name='{name}')"
