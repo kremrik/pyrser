@@ -32,23 +32,24 @@ def xfs(node: "Node", tgt_nm: str = None, tgt_file: str = None, search_type: str
             if vertex.name == tgt_nm and vertex.location == tgt_file:
                 return vertex
         else:
-            process_node(vertex)
+            _process_node(vertex)
 
         if vertex not in visited:
             visited.append(vertex)
             stack.extend(vertex.children.values())
 
 
-def process_node(node: "Node"):
+def _process_node(node: "Node"):
     print(node)
 
 
 def get_obj_name(line: str) -> str:
+    # TODO: implement regex for this in order to handle dunders
     clean_line = line.strip()
 
     no_def_found = not clean_line.startswith("def ")
     no_class_found = not clean_line.startswith("class ")
-    not_blacklisted = not is_line_blacklisted(line)
+    not_blacklisted = not _line_blacklisted(line)
 
     if no_def_found and no_class_found:
         return None
@@ -63,7 +64,7 @@ def get_obj_name(line: str) -> str:
     return name
 
 
-def is_line_blacklisted(line: str) -> bool:
+def _line_blacklisted(line: str) -> bool:
     for chars in IGNORE_LEADING_CHARS:
         if chars in line:
             return True
