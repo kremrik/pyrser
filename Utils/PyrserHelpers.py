@@ -3,6 +3,9 @@ from collections import deque, defaultdict
 import ntpath
 
 
+IGNORE_LEADING_CHARS = ["__"]
+
+
 def reader(filepath: str) -> list:
     with open(filepath, "r") as f:
         lines =f.readlines()
@@ -45,6 +48,7 @@ def get_obj_name(line: str) -> str:
 
     no_def_found = not clean_line.startswith("def ")
     no_class_found = not clean_line.startswith("class ")
+    not_blacklisted = not is_line_blacklisted(line)
 
     if no_def_found and no_class_found:
         return None
@@ -57,6 +61,13 @@ def get_obj_name(line: str) -> str:
     name = signature.split("(")[0]
     
     return name
+
+
+def is_line_blacklisted(line: str) -> bool:
+    for chars in IGNORE_LEADING_CHARS:
+        if chars in line:
+            return True
+    return False
 
 
 def get_node_type(line: str):

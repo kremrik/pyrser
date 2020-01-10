@@ -3,28 +3,22 @@ from Node import Node, DirNode, FileNode, ClsNode, FncNode
 from Utils.PyrserHelpers import reader, is_file, get_file_name_from_path, get_obj_name, get_node_type, get_next_nonempty_line
 
 
-place = 0  # TODO: find a way to avoid this...
 INDENT = "    "
 
 
 def pyrser(path: str) -> Node:
-    global place
-    place = 0
-
     if is_file(path):
         name = get_file_name_from_path(path)
         filenode_seed = FileNode(path, name)
 
         lines = reader(path)
         length = len(lines) - 1
-        output = file_parser(FileNode, path, name, lines, length)
+        output, _ = file_parser(FileNode, path, name, lines, length)
 
         return output
 
 
-def file_parser(node, location: str, name: str, lines: list, length: int, level: int = 0) -> Node:
-    global place
-
+def file_parser(node, location: str, name: str, lines: list, length: int, place: int = 0, level: int = 0) -> Node:
     node = node(location, name)
     new_node = None
     scope_bgn = place if place > 0 else 1  # always want to start at line 1, not 0
@@ -43,14 +37,14 @@ def file_parser(node, location: str, name: str, lines: list, length: int, level:
         # do not want to increment place until levels at this and next line equal
         if next_is_node and next_level < level:
             node.scope = [scope_bgn, place+1]
-            return node
+            return node, place
   
         place += 1
 
         # end-of-file logic
         if next_line is None:
             node.scope = [scope_bgn, place]
-            return node
+            return node, place
 
         # skip comment logic
         if '"""' in this_line:
@@ -62,12 +56,13 @@ def file_parser(node, location: str, name: str, lines: list, length: int, level:
         # recurse logic
         if this_is_node:
             this_node_type = get_node_type(this_line)
-            child = file_parser(this_node_type, location, this_is_node, lines, length, level+1)
+            child, new_place = file_parser(this_node_type, location, this_is_node, lines, length, place, level+1)
             child.parent = node
+            place = new_place
             node.add_child(child)
 
         # if no other conditions met, move on to the next line
         continue
     
     node.scope = [scope_bgn, place or 1]
-    return node
+    return node, place
