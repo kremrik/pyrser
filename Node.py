@@ -13,7 +13,7 @@ class Node(object):
         self.children[child.name] = child
 
     def __eq__(self, other):
-        # TODO: can't compare parent due to recursive loop
+        # can't compare parent due to recursive loop, determine if needed
         return self.location == other.location and \
             self.name == other.name and \
             self.children == other.children

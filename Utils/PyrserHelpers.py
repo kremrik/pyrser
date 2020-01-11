@@ -51,7 +51,6 @@ def _process_node(node: "Node"):
 
 
 def get_obj_name(line: str) -> str:
-    # TODO: implement regex for this in order to handle dunders
     clean_line = line.strip()
 
     if _line_blacklisted(line):
