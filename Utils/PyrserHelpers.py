@@ -1,9 +1,16 @@
-from Node import DirNode, FileNode, ClsNode, FncNode
+from Node import Node, DirNode, FileNode, ClsNode, FncNode
 from collections import deque, defaultdict
 import ntpath
 
 
-IGNORE_LEADING_CHARS = ["__"]
+BLACKLIST_CHARS = ["__"]
+
+
+def _line_blacklisted(line: str) -> bool:
+    for chars in BLACKLIST_CHARS:
+        if chars in line:
+            return True
+    return False
 
 
 def reader(filepath: str) -> list:
@@ -20,7 +27,7 @@ def get_file_name_from_path(path: str) -> str:
     return ntpath.basename(path)
 
 
-def xfs(node: "Node", tgt_nm: str = None, tgt_file: str = None, search_type: str = "dfs") -> "Node":
+def xfs(node: Node, tgt_nm: str = None, tgt_file: str = None, search_type: str = "dfs") -> Node:
     # TODO: could implement __hash__ for Node so we can use a set
     visited = []  
     stack = deque([node]) if search_type == "bfs" else [node]
@@ -47,9 +54,11 @@ def get_obj_name(line: str) -> str:
     # TODO: implement regex for this in order to handle dunders
     clean_line = line.strip()
 
+    if _line_blacklisted(line):
+        return None
+
     no_def_found = not clean_line.startswith("def ")
     no_class_found = not clean_line.startswith("class ")
-    not_blacklisted = not _line_blacklisted(line)
 
     if no_def_found and no_class_found:
         return None
@@ -62,13 +71,6 @@ def get_obj_name(line: str) -> str:
     name = signature.split("(")[0]
     
     return name
-
-
-def _line_blacklisted(line: str) -> bool:
-    for chars in IGNORE_LEADING_CHARS:
-        if chars in line:
-            return True
-    return False
 
 
 def get_node_type(line: str):
@@ -85,6 +87,9 @@ def get_node_type(line: str):
 
 
 def get_next_nonempty_line(lines: list, place: int, length: int) -> str:
+    # we're not applying the blacklisting rules here because both public
+    # and private methods/functions should trigger the end of "this" obj
+
     place += 1
 
     while place <= length:

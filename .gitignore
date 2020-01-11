@@ -3,3 +3,4 @@ __pycache__
 */__pycache__
 viz/.ipynb_checkpoints/
 Utils/__pycache__/
+.coverage

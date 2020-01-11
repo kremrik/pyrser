@@ -12,4 +12,4 @@ if __name__ == "__main__":
     # test2 = FncNode("/path/to/test1.py", "test")
     # test1.add_child(test2)
     # test2.parent = test1
-    # print(test2)
+    # print(test1)

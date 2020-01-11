@@ -133,9 +133,6 @@ class test_pyrser(unittest.TestCase):
 
         cls1 = ClsNode(test_file, "cls1")
         cls1.scope = [6, 8]
-        init = FncNode(test_file, "__init__")
-        init.scope = [7, 8]
-        cls1.add_child(init)
 
         cls2 = ClsNode(test_file, "cls2")
         cls2.scope = [11, 12]
@@ -150,6 +147,8 @@ class test_pyrser(unittest.TestCase):
         gold = filenode
 
         output = pyrser(test_file)
+
+        printer(repr(gold), repr(output))
 
         self.assertEqual(gold, output)
 

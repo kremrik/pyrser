@@ -54,6 +54,14 @@ class FileNode(Node):
             self.children == other.children and \
             self.scope == other.scope
 
+    def __str__(self):
+        cls_nm = type(self).__name__
+        name = self.name
+        scope = self.scope
+        loc = self.location
+
+        return f"{cls_nm}(name='{name}', scope={scope}, location={loc})"
+
 
 class ClsNode(FileNode):
 
@@ -63,9 +71,9 @@ class ClsNode(FileNode):
     def __str__(self):
         cls_nm = type(self).__name__
         name = self.name
+        scope = self.scope
 
-        if type(self) in (ClsNode, FncNode):
-            return f"{cls_nm}(name='{name}')"
+        return f"{cls_nm}(name='{name}', scope={scope})"
 
 
 class FncNode(FileNode):
@@ -77,6 +85,6 @@ class FncNode(FileNode):
     def __str__(self):
         cls_nm = type(self).__name__
         name = self.name
+        scope = self.scope
 
-        if type(self) in (ClsNode, FncNode):
-            return f"{cls_nm}(name='{name}')"
+        return f"{cls_nm}(name='{name}', scope={scope})"
