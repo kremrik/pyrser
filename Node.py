@@ -82,6 +82,9 @@ class FncNode(FileNode):
         super().__init__(location, name)
         self.calls = []
 
+    def add_call(self, call: "FncNode"):
+        self.calls.append(call)
+
     def __str__(self):
         cls_nm = type(self).__name__
         name = self.name

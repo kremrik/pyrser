@@ -148,6 +148,27 @@ class test_pyrser(unittest.TestCase):
 
         output = pyrser(test_file)
 
+        self.assertEqual(gold, output)
+
+    def test_mixed_classes_and_functions(self):
+        test_file = "/home/kemri/Projects/pyrser/test_files/test6.py"
+
+        filenode = FileNode(test_file, "test6.py")
+        filenode.scope = [1, 6]
+
+        fnc1 = FncNode(test_file, "say_hi")
+        fnc1.scope = [1, 2]
+
+        fnc2 = FncNode(test_file, "use_hi")
+        fnc2.scope = [5, 6]
+        fnc2.add_call(fnc1)
+
+        filenode.add_child(fnc1)
+        filenode.add_child(fnc2)
+        gold = filenode
+
+        output = pyrser(test_file)
+
         printer(repr(gold), repr(output))
 
         self.assertEqual(gold, output)

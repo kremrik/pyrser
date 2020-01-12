@@ -1,6 +1,6 @@
 from Node import Node, DirNode, FileNode, ClsNode, FncNode
-# from utils.file_utils import reader, is_file, get_file_name_from_path
-from Utils.PyrserHelpers import reader, is_file, get_file_name_from_path, get_obj_name, get_node_type, get_next_nonempty_line
+from Utils.PyrserHelpers import reader, is_file, get_file_name_from_path, get_obj_name, \
+    get_node_type, get_next_nonempty_line, xfs, get_fnc_calls
 
 
 INDENT = "    "
@@ -19,6 +19,11 @@ def pyrser(path: str) -> Node:
 
 
 def file_parser(node, location: str, name: str, lines: list, length: int, place: int = 0, level: int = 0) -> Node:
+    """
+    The function that will parse a .py file and return the basic hierarchy of its functions and classes. 
+    ``FncNode.calls`` functionality is added in a second stage.
+    """
+
     node = node(location, name)
     new_node = None
     scope_bgn = place if place > 0 else 1  # always want to start at line 1, not 0
@@ -66,3 +71,15 @@ def file_parser(node, location: str, name: str, lines: list, length: int, place:
     
     node.scope = [scope_bgn, place or 1]
     return node, place
+
+
+def add_calls(node: Node, lines: list) -> Node:
+    filename = node.location
+
+    for line in lines:
+        if calls := get_fnc_calls(line):  # if this line calls function(s)
+            for call in calls:
+                if fnc := xfs(node=node, tgt_name=call, tgt_file=node.location) and type(fnc) == FncNode:
+                    # get the function we're in
+                    # add fnc to its `calls` attr
+                    pass

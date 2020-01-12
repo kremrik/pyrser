@@ -1,6 +1,8 @@
 from Node import Node, DirNode, FileNode, ClsNode, FncNode
 from collections import deque, defaultdict
 import ntpath
+from typing import Tuple
+import re
 
 
 BLACKLIST_CHARS = ["__"]
@@ -99,5 +101,34 @@ def get_next_nonempty_line(lines: list, place: int, length: int) -> str:
             break
 
         place += 1
+
+    return None
+
+
+def get_fnc_calls(line: str) -> Tuple[str]:
+    """
+    Searches for function calls in a file line
+    https://docs.python.org/3/howto/regex.html#greedy-versus-non-greedy
+    """
+
+    fnc_pattern = re.compile(r"([a-zA-Z0-9_]+?)\(")
+    output = fnc_pattern.findall(line)
+    return tuple(output)
+
+
+def get_fnc_from_line(lines: list, place: int) -> str:
+    """
+    Searches a file for the function name this line belongs to. 
+    Starts at ``place`` and moves up the list until "def" is found.
+    """
+
+    while place-1 >= 0:
+        line_above = lines[place-1]
+        
+        if fnc := get_obj_name(line_above):
+            return fnc
+            break
+        else:
+            place -= 1
 
     return None
