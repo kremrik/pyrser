@@ -58,8 +58,12 @@ class test_get_fnc_calls(unittest.TestCase):
         output = get_fnc_calls("a.test()")
         self.assertEqual(output, ("test",))
 
-    def test_assert_fails_with_non_fnc(self):
+    def test_returns_falsy(self):
         output = get_fnc_calls("a = 'hi'")
+        self.assertEqual(output, ())
+
+    def test_doesnt_catch_def(self):
+        output = get_fnc_calls("def test():")
         self.assertEqual(output, ())
 
     

@@ -111,6 +111,9 @@ def get_fnc_calls(line: str) -> Tuple[str]:
     https://docs.python.org/3/howto/regex.html#greedy-versus-non-greedy
     """
 
+    if line.strip().startswith("def") or line.strip().startswith("class"):
+        return ()
+
     fnc_pattern = re.compile(r"([a-zA-Z0-9_]+?)\(")
     output = fnc_pattern.findall(line)
     return tuple(output)

@@ -150,7 +150,7 @@ class test_pyrser(unittest.TestCase):
 
         self.assertEqual(gold, output)
 
-    def test_mixed_classes_and_functions(self):
+    def test_with_calls(self):
         test_file = "/home/kemri/Projects/pyrser/test_files/test6.py"
 
         filenode = FileNode(test_file, "test6.py")
@@ -168,8 +168,6 @@ class test_pyrser(unittest.TestCase):
         gold = filenode
 
         output = pyrser(test_file)
-
-        printer(repr(gold), repr(output))
 
         self.assertEqual(gold, output)
 

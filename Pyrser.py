@@ -1,6 +1,6 @@
 from Node import Node, DirNode, FileNode, ClsNode, FncNode
 from Utils.PyrserHelpers import reader, is_file, get_file_name_from_path, get_obj_name, \
-    get_node_type, get_next_nonempty_line, xfs, get_fnc_calls
+    get_node_type, get_next_nonempty_line, xfs, get_fnc_calls, get_fnc_from_line
 
 
 INDENT = "    "
@@ -14,8 +14,10 @@ def pyrser(path: str) -> Node:
         lines = reader(path)
         length = len(lines) - 1
         output, _ = file_parser(FileNode, path, name, lines, length)
-
-        return output
+        
+        output_with_calls = add_calls(output, lines)
+        
+        return output_with_calls
 
 
 def file_parser(node, location: str, name: str, lines: list, length: int, place: int = 0, level: int = 0) -> Node:
@@ -76,10 +78,14 @@ def file_parser(node, location: str, name: str, lines: list, length: int, place:
 def add_calls(node: Node, lines: list) -> Node:
     filename = node.location
 
-    for line in lines:
+    for place, line in enumerate(lines):
         if calls := get_fnc_calls(line):  # if this line calls function(s)
-            for call in calls:
-                if fnc := xfs(node=node, tgt_name=call, tgt_file=node.location) and type(fnc) == FncNode:
-                    # get the function we're in
-                    # add fnc to its `calls` attr
-                    pass
+            for call in calls:  # there may be multiple functions called
+                # if that fnc is defined in our Node AND it's a FncNode, add it as a call to 
+                # whichever function called it
+                if called_node := xfs(node=node, tgt_nm=call, tgt_file=node.location):
+                    parent_fnc_name = get_fnc_from_line(lines, place)
+                    parent_fnc = xfs(node=node, tgt_nm=parent_fnc_name, tgt_file=node.location)
+                    parent_fnc.add_call(called_node)
+
+    return node

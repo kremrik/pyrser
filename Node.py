@@ -89,5 +89,13 @@ class FncNode(FileNode):
         cls_nm = type(self).__name__
         name = self.name
         scope = self.scope
+        calls = [call.name for call in self.calls]
 
-        return f"{cls_nm}(name='{name}', scope={scope})"
+        return f"{cls_nm}(name='{name}', scope={scope}, calls={calls})"
+
+    def __eq__(self, other):
+        return self.location == other.location and \
+            self.name == other.name and \
+            self.children == other.children and \
+            self.scope == other.scope and \
+            self.calls == other.calls  # TODO: will need to handle recursive calls
