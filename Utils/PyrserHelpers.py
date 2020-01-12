@@ -37,11 +37,23 @@ def xfs(node: Node, tgt_nm: str = None, tgt_file: str = None, search_type: str =
     while stack:
         vertex = stack.pop()
 
-        if tgt_nm and tgt_file:
-            if vertex.name == tgt_nm and vertex.location == tgt_file:
-                return vertex
-        else:
-            _process_node(vertex)
+        if vertex.name == tgt_nm and vertex.location == tgt_file:
+            return vertex
+
+        if vertex not in visited:
+            visited.append(vertex)
+            stack.extend(vertex.children.values())
+
+
+def dfs_generator(node: Node) -> Node:
+    # TODO: could implement __hash__ for Node so we can use a set
+    visited = []  
+    stack = [node]
+
+    while stack:
+        vertex = stack.pop()
+
+        yield vertex
 
         if vertex not in visited:
             visited.append(vertex)
