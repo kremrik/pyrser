@@ -1,7 +1,7 @@
 from Node import Node, DirNode, FileNode, ClsNode, FncNode
 from Utils.PyrserHelpers import reader, is_file, get_file_name_from_path, get_obj_name, \
     get_node_type, get_next_nonempty_line, xfs, get_fnc_calls, get_fnc_from_line, is_dir, \
-    list_dir, nonempty_pyfile
+    list_dir, nonempty_pyfile  # TODO: convert to alias
 
 
 INDENT = "    "
@@ -105,10 +105,8 @@ def add_calls(node: Node, lines: list) -> Node:
     filename = node.location
 
     for place, line in enumerate(lines):
-        if calls := get_fnc_calls(line):  # if this line calls function(s)
-            for call in calls:  # there may be multiple functions called
-                # if that fnc is defined in our Node AND it's a FncNode, add it as a call to 
-                # whichever function called it
+        if calls := get_fnc_calls(line):
+            for call in calls:
                 if called_node := xfs(node=node, tgt_nm=call, tgt_file=node.location):
                     parent_fnc_name = get_fnc_from_line(lines, place)
                     parent_fnc = xfs(node=node, tgt_nm=parent_fnc_name, tgt_file=node.location)

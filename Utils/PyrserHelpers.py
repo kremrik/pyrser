@@ -5,10 +5,18 @@ from typing import Tuple
 import re
 
 
+"""
+TODO: break functions that work with paths/files/dirs into separate module
+TODO: create more sophisticated blacklisting function to handle things like `.git`
+"""
+
+
 BLACKLIST_CHARS = ["__"]
 
 
 def _line_blacklisted(line: str) -> bool:
+    # TODO: convert to decorator
+
     for chars in BLACKLIST_CHARS:
         if chars in line:
             return True
@@ -65,7 +73,7 @@ def xfs(node: Node, tgt_nm: str = None, tgt_file: str = None, search_type: str =
 
 
 def dfs_generator(node: Node) -> Node:
-    # TODO: could implement __hash__ for Node so we can use a set
+    # TODO: duplication between this and `xfs`
     visited = []  
     stack = [node]
 
@@ -119,8 +127,10 @@ def get_node_type(line: str):
 
 
 def get_next_nonempty_line(lines: list, place: int, length: int) -> str:
-    # we're not applying the blacklisting rules here because both public
-    # and private methods/functions should trigger the end of "this" obj
+    """
+    we're not applying the blacklisting rules here because both public
+    and private methods/functions should trigger the end of "this" obj
+    """
 
     place += 1
 
