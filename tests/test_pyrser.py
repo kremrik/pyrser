@@ -171,6 +171,98 @@ class test_pyrser(unittest.TestCase):
 
         self.assertEqual(gold, output)
 
+    def test_empty_dir(self):
+        directory = "/home/kemri/Projects/pyrser/test_files/test_dir0"
+        gold = DirNode(directory, "test_dir0")
+        output = pyrser(directory)
+
+        self.assertEqual(output, gold)
+
+    def test_dir_with_no_py(self):
+        directory = "/home/kemri/Projects/pyrser/test_files/test_dir1"
+        gold = DirNode(directory, "test_dir1")
+        output = pyrser(directory)
+
+        self.assertEqual(output, gold)
+
+    def test_dir_with_one_empty_py(self):
+        directory = "/home/kemri/Projects/pyrser/test_files/test_dir2"
+        gold = DirNode(directory, "test_dir2")
+        output = pyrser(directory)
+
+        self.assertEqual(output, gold)
+
+    def test_dir_with_one_nonempty_py(self):
+        directory = "/home/kemri/Projects/pyrser/test_files/test_dir3"
+
+        dirnode = DirNode(directory, "test_dir3")
+
+        filenode = FileNode(directory + "/test1.py", "test1.py")
+        filenode.scope = [1, 3]
+
+        fncnode = FncNode(directory + "/test1.py", "test")
+        fncnode.parent = filenode
+        fncnode.scope = [1, 3]
+
+        filenode.add_child(fncnode)
+        filenode.parent = dirnode
+        
+        dirnode.add_child(filenode)
+
+        gold = dirnode
+        output = pyrser(directory)
+
+        self.assertEqual(output, gold)
+
+    def test_dir_with_two_nonempty_py(self):
+        directory = "/home/kemri/Projects/pyrser/test_files/test_dir4"
+
+        dirnode = DirNode(directory, "test_dir4")
+
+        filenode = FileNode(directory + "/test1.py", "test1.py")
+        filenode.scope = [1, 3]
+        fncnode = FncNode(directory + "/test1.py", "test")
+        fncnode.parent = filenode
+        fncnode.scope = [1, 3]
+        filenode.add_child(fncnode)
+        filenode.parent = dirnode
+        dirnode.add_child(filenode)
+
+        filenode2 = FileNode(directory + "/test2.py", "test2.py")
+        filenode2.scope = [1, 3]
+        fncnode2 = FncNode(directory + "/test2.py", "test")
+        fncnode2.parent = filenode2
+        fncnode2.scope = [1, 3]
+        filenode2.add_child(fncnode2)
+        filenode2.parent = dirnode
+        dirnode.add_child(filenode2)
+
+        gold = dirnode
+        output = pyrser(directory)
+
+        self.assertEqual(output, gold)
+
+    def test_dir_within_dir(self):
+        directory = "/home/kemri/Projects/pyrser/test_files/test_dir5"
+        dirnode = DirNode(directory, "test_dir5")
+        nested_dir = DirNode(directory + "/test_dir3", "test_dir3")
+        nested_dir.parent = dirnode
+
+        filenode = FileNode(directory + "/test_dir3" + "/test1.py", "test1.py")
+        filenode.scope = [1, 3]
+        fncnode = FncNode(directory + "/test_dir3" + "/test1.py", "test")
+        fncnode.parent = filenode
+        fncnode.scope = [1, 3]
+        filenode.add_child(fncnode)
+        filenode.parent = nested_dir
+        nested_dir.add_child(filenode)
+        dirnode.add_child(nested_dir)
+
+        gold = dirnode
+        output = pyrser(directory)
+
+        self.assertEqual(output, gold)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

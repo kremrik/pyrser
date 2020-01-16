@@ -1,23 +1,49 @@
 from Node import Node, DirNode, FileNode, ClsNode, FncNode
 from Utils.PyrserHelpers import reader, is_file, get_file_name_from_path, get_obj_name, \
-    get_node_type, get_next_nonempty_line, xfs, get_fnc_calls, get_fnc_from_line
+    get_node_type, get_next_nonempty_line, xfs, get_fnc_calls, get_fnc_from_line, is_dir, \
+    list_dir, nonempty_pyfile
 
 
 INDENT = "    "
 
 
 def pyrser(path: str) -> Node:
+    if is_dir(path):
+        output_with_calls = dir_parser(path)
+
     if is_file(path):
         name = get_file_name_from_path(path)
-        filenode_seed = FileNode(path, name)
 
         lines = reader(path)
         length = len(lines) - 1
-        output, _ = file_parser(FileNode, path, name, lines, length)
+        output, _ = file_parser(FileNode, path, name, lines, length)  # TODO: eliminate useless second return value
         
         output_with_calls = add_calls(output, lines)
         
-        return output_with_calls
+    return output_with_calls
+
+
+def dir_parser(path: str) -> Node:
+    name = get_file_name_from_path(path)
+    dirnode = DirNode(path, name)
+
+    for f in list_dir(path):
+        if nonempty_pyfile(f):
+            f_name = get_file_name_from_path(f)
+            lines = reader(f)
+            length = len(lines) - 1
+            output, _ = file_parser(FileNode, f, f_name, lines, length)  # TODO: eliminate useless second return value
+
+            output_with_calls = add_calls(output, lines)
+            output.parent = dirnode
+            dirnode.add_child(output)
+
+        if is_dir(f):
+            child_dir = dir_parser(f)
+            child_dir.parent = dirnode
+            dirnode.add_child(child_dir)
+
+    return dirnode
 
 
 def file_parser(node, location: str, name: str, lines: list, length: int, place: int = 0, level: int = 0) -> Node:

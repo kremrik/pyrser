@@ -3,7 +3,8 @@ import sys
 
 pwd = str(Path(".").absolute()); sys.path.insert(0, pwd)
 
-from Utils.PyrserHelpers import get_obj_name, get_fnc_calls, get_fnc_from_line
+from Node import DirNode, FileNode
+from Utils.PyrserHelpers import get_obj_name, get_fnc_calls, get_fnc_from_line, make_dir_tree
 import unittest
 
 
@@ -82,6 +83,15 @@ class test_get_fnc_from_line(unittest.TestCase):
         place = 1
         output = get_fnc_from_line(lines, place)
         self.assertEqual(output, None)
+
+
+class test_make_dir_tree(unittest.TestCase):
+
+    def test_empty_dir(self):
+        directory = "/home/kemri/Projects/pyrser/test_files/test_dir0"
+        gold = DirNode(directory, "test_dir0")
+        output = make_dir_tree(directory)
+        self.assertEqual()
 
 
 if __name__ == "__main__":

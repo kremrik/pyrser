@@ -1,6 +1,6 @@
 from Node import Node, DirNode, FileNode, ClsNode, FncNode
 from collections import deque, defaultdict
-import ntpath
+import os
 from typing import Tuple
 import re
 
@@ -17,16 +17,35 @@ def _line_blacklisted(line: str) -> bool:
 
 def reader(filepath: str) -> list:
     with open(filepath, "r") as f:
-        lines =f.readlines()
+        lines = f.readlines()
     return lines
 
 
 def is_file(path: str) -> bool:
-    return ntpath.isfile(path)
+    return os.path.isfile(path)
+
+
+def is_dir(path: str) -> bool:
+    if _line_blacklisted(path):
+        return False
+        
+    return os.path.isdir(path)
+
+
+def list_dir(path: str):
+    for f in os.listdir(path):
+        yield(os.path.join(path, f))
+
+
+def nonempty_pyfile(path: str) -> bool:
+    if _line_blacklisted(path):
+        return False
+
+    return path.endswith(".py") and os.path.getsize(path) > 0
 
 
 def get_file_name_from_path(path: str) -> str:
-    return ntpath.basename(path)
+    return os.path.basename(path)
 
 
 def xfs(node: Node, tgt_nm: str = None, tgt_file: str = None, search_type: str = "dfs") -> Node:
