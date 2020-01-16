@@ -9,7 +9,11 @@ So far, we have the basic groundwork completed:
 ### What's next?
 * [x] Functionality to pass pyrser a directory
 * [ ] Add functions in jupyter notebook to ``Pyrser.py``
+* [ ] Create simple documentation on usage w/ examples
 * [ ] Ability to determine where a function came from, from with a module (in the event names are the same and the module is aliased like mod.fnc())
+* [ ] More sophisticated blacklisting rules to eliminate hidden dirs/files (ex, ``.git``)
+
+### What's on the wish list?
+* [ ] readthedocs sphinx documentation
 * [ ] Simple webserver to server the graphviz as html
 * [ ] In the future, a D3js representation of the graphviz output to allow users to click on functions and see the actual source code
-* [ ] More sophisticated blacklisting rules to eliminate hidden dirs/files (ex, ``.git``)
