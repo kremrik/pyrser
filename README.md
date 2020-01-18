@@ -4,10 +4,11 @@ A simple tool to visualize function calls in Python modules
 ### Where are we at?
 So far, we have the basic groundwork completed:
 - Ability to serialize a .py file into a custom graph
-- Ability to visualize a .py file's calls with graphviz
+- Ability to visualize a .py file's calls with graphviz (but ONLY for functions defined in the same file)
 
 ### What's next?
 * [x] Functionality to pass pyrser a directory
+* [ ] ImportParser module to take a function call of any kind as input, traverse the Pyrser node tree, and return the corresponding FncNode
 * [ ] Add functions in jupyter notebook to ``Pyrser.py``
 * [ ] Create simple documentation on usage w/ examples
 * [ ] Ability to determine where a function came from, from with a module (in the event names are the same and the module is aliased like mod.fnc())
