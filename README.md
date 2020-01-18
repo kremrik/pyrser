@@ -34,7 +34,7 @@ FileNode(name='example.py', scope=[1, 16], location=/path/to/example.py)
  |-- FncNode(name='test_it_out', scope=[14, 16], calls=['Person', 'is_yoda'])
 ```
 
-Pyser creates a simple graph with `children` and `parent` attributes for each node that allow you to traverse the graph in either direction from wherever you are. The presence of the instantiation call to ``Person`` is an open TODO (more of which can be found below). There is functionality in the works to produce a graphviz representation of this graph, which would generate an image like below:
+Pyser creates a simple graph with `children` and `parent` attributes for each node that allow you to traverse the graph in either direction from wherever you are. Additionally, `scope` describes the lines each node encompasses (for example, ``test_it_out`` is defined from line 14 to 16 in ``example.py``) The presence of the instantiation call to ``Person`` is an open TODO (more of which can be found below). There is functionality in the works to produce a graphviz representation of this graph, which would generate an image like below:
 
 ![Alt text](images/example.png "example.png")
 
