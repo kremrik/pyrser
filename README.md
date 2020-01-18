@@ -34,7 +34,7 @@ FileNode(name='example.py', scope=[1, 16], location=/path/to/example.py)
  |-- FncNode(name='test_it_out', scope=[14, 16], calls=['Person', 'is_yoda'])
 ```
 
-Pyser creates a simple graph with `children` and `parent` attributes for each node that allow you to traverse the graph in either direction from wherever you are. Additionally, `scope` describes the lines each node encompasses (for example, ``test_it_out`` is defined from line 14 to 16 in ``example.py``) The presence of the instantiation call to ``Person`` is an open TODO (more of which can be found below). There is functionality in the works to produce a graphviz representation of this graph, which would generate an image like below:
+Pyser creates a simple graph with `children` and `parent` attributes for each node that allow you to traverse the graph in either direction from wherever you are. Additionally, `scope` describes the lines each node encompasses (for example, ``test_it_out`` is defined from line 14 to 16 in ``example.py``) The presence of the instantiation call to ``Person`` is an open issue. There is functionality in the works to produce a graphviz representation of this graph, which would generate an image like below:
 
 ![Alt text](images/example.png "example.png")
 
@@ -43,16 +43,7 @@ So far, we have the basic groundwork completed:
 - Ability to serialize a .py file into a custom graph
 - Ability to visualize a .py file's calls with graphviz (but ONLY for functions defined in the same file)
 
-### What's next (aka, open issues)
-* [x] Functionality to pass pyrser a directory
-* [ ] Don't add class instantiations to `calls`
-* [ ] Find a way to avoid recursive loops when `parent` added to the __eq__ method check in ``Node.py``
-* [ ] ImportParser module to take a function call of any kind as input, traverse the Pyrser node tree, and return the corresponding FncNode
-* [ ] Add functions in jupyter notebook to ``Pyrser.py``
-* [x] Create simple documentation on usage w/ examples
-* [ ] More sophisticated blacklisting rules to eliminate hidden dirs/files (ex, ``.git``)
-
-### What's on the wish list
+### Where are we going (aka, wish list)
 * [ ] readthedocs sphinx documentation
 * [ ] Simple webserver to server the graphviz as html
-* [ ] In the future, a D3js representation of the graphviz output to allow users to click on functions and see the actual source code
+* [ ] In the distant future, a D3js representation of the graphviz output to allow users to click on functions and see the actual source code
