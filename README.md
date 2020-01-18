@@ -44,6 +44,6 @@ So far, we have the basic groundwork completed:
 - Ability to visualize a .py file's calls with graphviz (but ONLY for functions defined in the same file)
 
 ### Where are we going (aka, wish list)
-* [ ] readthedocs sphinx documentation
-* [ ] Simple webserver to server the graphviz as html
-* [ ] In the distant future, a D3js representation of the graphviz output to allow users to click on functions and see the actual source code
+- readthedocs sphinx documentation
+- Simple webserver to server the graphviz as html
+- In the distant future, a D3js representation of the graphviz output to allow users to click on functions and see the actual source code
