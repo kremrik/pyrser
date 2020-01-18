@@ -22,7 +22,7 @@ def test_it_out():
     p.is_yoda()
 ```
 
-```python
+```
 from Pyrser import pyrser
 
 graph = pyrser("example.py")
