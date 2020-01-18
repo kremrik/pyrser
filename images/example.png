@@ -1,0 +1,13 @@
+// example.py
+digraph {
+	subgraph "cluster_example.py" {
+		subgraph cluster_Person {
+			is_yoda [shape=box]
+			label=Person
+		}
+		test_it_out [shape=box]
+		label="example.py"
+	}
+	test_it_out -> Person
+	test_it_out -> is_yoda
+}
