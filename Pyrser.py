@@ -105,14 +105,14 @@ def file_parser(node, location: str, name: str, lines: list, length: int, place:
 
 
 def add_calls(node: Node, lines: list) -> Node:
-    filename = node.location
+    # filename = node.location
 
-    for place, line in enumerate(lines):
-        if calls := get_fnc_calls(line):
-            for call in calls:
-                if called_node := xfs(node=node, tgt_nm=call, tgt_file=node.location):
-                    parent_fnc_name = get_fnc_from_line(lines, place)
-                    parent_fnc = xfs(node=node, tgt_nm=parent_fnc_name, tgt_file=node.location)
-                    parent_fnc.add_call(called_node)
+    # for place, line in enumerate(lines):
+    #     if calls := get_fnc_calls(line):
+    #         for call in calls:
+    #             if called_node := xfs(node=node, tgt_nm=call, tgt_file=node.location):
+    #                 parent_fnc_name = get_fnc_from_line(lines, place)
+    #                 parent_fnc = xfs(node=node, tgt_nm=parent_fnc_name, tgt_file=node.location)
+    #                 parent_fnc.add_call(called_node)
 
     return node
