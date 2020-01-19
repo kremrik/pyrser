@@ -37,6 +37,20 @@ class Node(object):
         """
         return dfs_printer(self)
 
+    def __iter__(self):
+        # TODO: duplicated from ``Utils.PyrserHelpers.dfs_generator``
+        visited = []  
+        stack = [self]
+
+        while stack:
+            vertex = stack.pop()
+
+            yield vertex
+
+            if vertex not in visited:
+                visited.append(vertex)
+                stack.extend(vertex.children.values())
+
 
 class DirNode(Node):
 

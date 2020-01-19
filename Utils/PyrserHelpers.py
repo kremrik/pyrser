@@ -73,7 +73,7 @@ def xfs(node: Node, tgt_nm: str = None, tgt_file: str = None, search_type: str =
 
 
 def dfs_generator(node: Node) -> Node:
-    # TODO: duplication between this and `xfs`
+    # TODO: duplication between this and `xfs` and ``Node``
     visited = []  
     stack = [node]
 
