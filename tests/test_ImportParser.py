@@ -7,23 +7,41 @@ sys.path.insert(0, pwd)
 from Pyrser import pyrser
 from Utils.PyrserHelpers import xfs
 from Node import Node, DirNode, FileNode, ClsNode, FncNode
-from ImportParser import add_calls
+from ImportParser import get_fnc_calls
 import unittest
 
 
-class test_ImportParser(unittest.TestCase):
+class test_get_fnc_calls(unittest.TestCase):
 
-    def test_from_module_import_file(self):
-        path = "/home/kemri/Projects/pyrser/test_files/test_imports1"
-        path_file = path + "/file1.py"
+    def test_empty_call_without_alias(self):
+        inpt = "test_call()"
+        gold = [("", "test_call")]
+        output = get_fnc_calls(inpt)
+        self.assertEqual(gold, output)
 
-        called_gold = FncNode(location=path_file, name="fnc")
-        called_gold.scope = [1, 2]
+    def test_args_call_without_alias(self):
+        inpt = "test_call(arg)"
+        gold = [("", "test_call")]
+        output = get_fnc_calls(inpt)
+        self.assertEqual(gold, output)
 
-        graph = pyrser(path)
-        graph_with_calls = add_calls(graph)
+    def test_call_with_alias(self):
+        inpt = "module.test_call()"
+        gold = [("module", "test_call")]
+        output = get_fnc_calls(inpt)
+        self.assertEqual(gold, output)
 
-        # self.assertEqual(xfs(graph_with_calls, "fnc", path_file), called_gold)
+    def test_call_with_multiple_aliases(self):
+        inpt = "module.file.test_call()"
+        gold = [("module.file", "test_call")]
+        output = get_fnc_calls(inpt)
+        self.assertEqual(gold, output)
+
+    def test_call_with_multiple_aliases_and_arg(self):
+        inpt = "module.file.test_call(test)"
+        gold = [("module.file", "test_call")]
+        output = get_fnc_calls(inpt)
+        self.assertEqual(gold, output)
 
 
 if __name__ == "__main__":

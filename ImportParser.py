@@ -4,14 +4,22 @@ import re
 from typing import Tuple
 
 
-pattern = re.compile('(?P<location>[a-zA-Z0-9_]+?\.)?(?P<call>[a-zA-Z0-9_]+?)\(')
+# https://stackoverflow.com/questions/9018947/regex-string-with-optional-parts
+pattern = re.compile('(?P<location>[a-zA-Z0-9_.]+?\.)?(?P<call>[a-zA-Z0-9_]+?)\(')
 
 
-def get_fnc_calls(line: str):
+def get_fnc_calls(line: str) -> tuple:
     if line.strip().startswith("def") or line.strip().startswith("class"):
         return ()
 
-    return pattern.findall(line)
+    output = pattern.findall(line)
+    cleaned_output = [
+        (x[:-1], y) 
+        if x.endswith(".") 
+        else (x, y) 
+        for x, y in output]
+
+    return cleaned_output
 
 
 def add_calls(graph: Node) -> Node:

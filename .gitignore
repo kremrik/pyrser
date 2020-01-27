@@ -4,3 +4,4 @@ __pycache__
 viz/.ipynb_checkpoints/
 Utils/__pycache__/
 .coverage
+main.py
