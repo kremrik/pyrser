@@ -43,6 +43,18 @@ class test_get_fnc_calls(unittest.TestCase):
         output = get_fnc_calls(inpt)
         self.assertEqual(gold, output)
 
+    def test_nested_calls(self):
+        inpt = "module1.file1.fnc1(module2.file2.fnc2(arg1, arg2))"
+        gold = [("module1.file1", "fnc1"), ("module2.file2", "fnc2")]
+        output = get_fnc_calls(inpt)
+        self.assertEqual(gold, output)
+
+    def test_multiple_calls_sep_by_semicolon(self):
+        inpt = "module1.file1.fnc1(); module2.file2.fnc2(arg1, arg2))"
+        gold = [("module1.file1", "fnc1"), ("module2.file2", "fnc2")]
+        output = get_fnc_calls(inpt)
+        self.assertEqual(gold, output)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

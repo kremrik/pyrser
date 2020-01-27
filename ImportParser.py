@@ -1,14 +1,14 @@
 from Node import Node, FileNode
 from Utils.PyrserHelpers import reader, xfs
 import re
-from typing import Tuple
+from typing import Tuple, List
 
 
 # https://stackoverflow.com/questions/9018947/regex-string-with-optional-parts
 pattern = re.compile('(?P<location>[a-zA-Z0-9_.]+?\.)?(?P<call>[a-zA-Z0-9_]+?)\(')
 
 
-def get_fnc_calls(line: str) -> tuple:
+def get_fnc_calls(line: str) -> List[tuple]:
     if line.strip().startswith("def") or line.strip().startswith("class"):
         return ()
 
