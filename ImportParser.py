@@ -22,6 +22,13 @@ def get_fnc_calls(line: str) -> List[tuple]:
     return cleaned_output
 
 
+def get_node_from_path(fnc_call: tuple, current_file: str, graph: Node):
+    if fnc_call[0]:
+        pass
+    else:
+        return xfs(graph, fnc_call[1], current_file)
+
+
 def add_calls(graph: Node) -> Node:
     """
     `graph` is a fully populated ``Node`` object, which means it contains all the 
