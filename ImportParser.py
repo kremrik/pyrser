@@ -1,6 +1,7 @@
 from Node import Node, FileNode
 from Utils.PyrserHelpers import reader, xfs
 import re
+import os
 from typing import Tuple, List
 
 
@@ -22,23 +23,16 @@ def get_fnc_calls(line: str) -> List[tuple]:
     return cleaned_output
 
 
-def get_node_from_path(fnc_call: tuple, current_file: str, graph: Node):
-    if fnc_call[0]:
-        pass
-    else:
-        return xfs(graph, fnc_call[1], current_file)
-
-
-def add_calls(graph: Node) -> Node:
+def get_node_from_func_call(import_path: str, function: str, current_file: str, graph: Node):
     """
-    `graph` is a fully populated ``Node`` object, which means it contains all the 
-    paths necessary to fully traverse the package, module, or file. And it does
-    not matter how we traverse it either, only that we hit every vertex.
+    A function that takes an import path like "module.file" and returns 
+    a string denoting the path to the file it was imported from if it
+    exists in the project, else it returns ""
     """
+    if not import_path:
+        return xfs(graph, function, current_file)
 
-    for node in graph:
-        if type(node) == FileNode:
-            lines = reader(node.location)
-            
-
-    print(repr(graph))
+    parent_dir = os.path.dirname(current_file)
+    import_file = parent_dir + "/" + import_path + ".py"
+    
+    return xfs(graph, function, import_file)

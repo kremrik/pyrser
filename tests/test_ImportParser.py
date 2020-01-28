@@ -7,7 +7,7 @@ sys.path.insert(0, pwd)
 from Pyrser import pyrser
 from Utils.PyrserHelpers import xfs
 from Node import Node, DirNode, FileNode, ClsNode, FncNode
-from ImportParser import get_fnc_calls, get_node_from_path
+from ImportParser import get_fnc_calls, get_node_from_func_call
 import unittest
 
 
@@ -56,56 +56,70 @@ class test_get_fnc_calls(unittest.TestCase):
         self.assertEqual(gold, output)
 
 
-class test_get_node_from_path(unittest.TestCase):
+# class test_get_node_from_path(unittest.TestCase):
 
-    def test_function_in_current_file(self):
-        test_file = "/path/to/test1.py"
-        filenode = FileNode(test_file, "test1.py")
-        fncnode = FncNode(test_file, "test")
-        fncnode.parent = filenode
-        filenode.add_child(fncnode)
+#     def test_function_in_current_file(self):
+#         test_file = "/path/to/test1.py"
+#         filenode = FileNode(test_file, "test1.py")
+#         fncnode = FncNode(test_file, "test")
+#         fncnode.parent = filenode
+#         filenode.add_child(fncnode)
         
-        fnc_call = ("", "test")
-        current_file = test_file
-        graph = filenode
+#         fnc_call = ("", "test")
+#         current_file = test_file
+#         graph = filenode
 
-        gold = fncnode
+#         gold = fncnode
 
-        output = get_node_from_path(fnc_call, current_file, graph)
+#         output = get_node_from_path(fnc_call, current_file, graph)
+
+#         self.assertEqual(gold, output)
+
+#     def test_no_function_in_current_file(self):
+#         test_file = "/path/to/test1.py"
+#         filenode = FileNode(test_file, "test1.py")
+#         fncnode = FncNode(test_file, "test")
+#         fncnode.parent = filenode
+#         filenode.add_child(fncnode)
+        
+#         fnc_call = ("", "test_function")
+#         current_file = test_file
+#         graph = filenode
+
+#         gold = None
+
+#         output = get_node_from_path(fnc_call, current_file, graph)
+
+#         self.assertEqual(gold, output)
+
+
+class test_get_filepath_from_import_path(unittest.TestCase):
+
+    def test_fnc_defined_in_same_file(self):
+        test_file = "/home/kemri/Projects/pyrser/test_files/test_imports1"
+        graph = pyrser(test_file)
+        import_path = ""
+        function = "fnc"
+        current_file = test_file + "/file.py"
+
+        gold = FncNode(current_file, "fnc")
+        gold.scope = [1, 2]
+
+        output = get_node_from_func_call(import_path, function, current_file, graph)
 
         self.assertEqual(gold, output)
 
-    def test_no_function_in_current_file(self):
-        test_file = "/path/to/test1.py"
-        filenode = FileNode(test_file, "test1.py")
-        fncnode = FncNode(test_file, "test")
-        fncnode.parent = filenode
-        filenode.add_child(fncnode)
-        
-        fnc_call = ("", "test_function")
-        current_file = test_file
-        graph = filenode
+    def test_fnc_imported_from_file(self):
+        test_file = "/home/kemri/Projects/pyrser/test_files/test_imports1"
+        graph = pyrser(test_file)
+        import_path = "file"
+        function = "fnc"
+        current_file = test_file + "/main.py"
 
-        gold = None
+        gold = FncNode(test_file + "/file.py", "fnc")
+        gold.scope = [1, 2]
 
-        output = get_node_from_path(fnc_call, current_file, graph)
-
-        self.assertEqual(gold, output)
-
-    def test_function_in_another_file(self):
-        test_file = "/path/to/test1.py"
-        filenode = FileNode(test_file, "test1.py")
-        fncnode = FncNode(test_file, "test")
-        fncnode.parent = filenode
-        filenode.add_child(fncnode)
-        
-        fnc_call = ("test1", "test")
-        current_file = "/path/to/another.py"
-        graph = filenode
-
-        gold = fncnode
-
-        output = get_node_from_path(fnc_call, current_file, graph)
+        output = get_node_from_func_call(import_path, function, current_file, graph)
 
         self.assertEqual(gold, output)
 

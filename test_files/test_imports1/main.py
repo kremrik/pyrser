@@ -1,5 +1,4 @@
-from Module1 import file
+import file
 
 def main():
     file.fnc()
-
