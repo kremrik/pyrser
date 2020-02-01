@@ -52,8 +52,8 @@ def get_node_from_func_call(fnc_call: tuple, current_file: str, graph: Node):
             import_stmt = get_import_stmt(current_file, fnc_name)
             import_path = get_filepath_from_import(import_stmt, current_file)
             return xfs(graph, fnc_name, import_path)
-        
-        return try_local
+        else:
+            return try_local
 
     else:
         parent_dir = os.path.dirname(current_file)
