@@ -6,14 +6,15 @@ from typing import Tuple, List
 
 
 # https://stackoverflow.com/questions/9018947/regex-string-with-optional-parts
-pattern = re.compile('(?P<location>[a-zA-Z0-9_.]+?\.)?(?P<call>[a-zA-Z0-9_]+?)\(')
+fnc_call_pattern = re.compile('(?P<location>[a-zA-Z0-9_.]+?\.)?(?P<call>[a-zA-Z0-9_]+?)\(')
+import_pattern = re.compile(r"from ([a-zA-Z0-9_]*) import")
 
 
 def get_fnc_calls(line: str) -> List[tuple]:
     if line.strip().startswith("def") or line.strip().startswith("class"):
         return ()
 
-    output = pattern.findall(line)
+    output = fnc_call_pattern.findall(line)
     cleaned_output = [
         (x[:-1], y) 
         if x.endswith(".") 
@@ -31,15 +32,26 @@ def get_import_stmt(filepath: str, fnc_name: str) -> str:
         return ""
 
 
-import_pattern = re.compile(r"from ([a-zA-Z0-9_]*) import")
 def get_filepath_from_import(import_stmt: str, current_file: str) -> str:
     filename = import_pattern.findall(import_stmt)[0]
-    parent_dir = os.path.dirname(current_file)
-    sibling_files = [f for f in os.listdir(parent_dir) if f.endswith(".py")]
-    host_file = [f for f in sibling_files if filename in f][0]
+    parent_dir = get_parent_dir(current_file)
+    sibling_files = get_sibling_files(parent_dir)
+    host_file = get_host_file(sibling_files, filename)
     host_loc = os.path.join(parent_dir, host_file)
     
     return host_loc
+
+
+def get_parent_dir(path: str) -> str:
+    return os.path.dirname(path)
+
+
+def get_sibling_files(path: str) -> List[str]:
+    return [f for f in os.listdir(path) if f.endswith(".py")]
+
+
+def get_host_file(sibling_files: List[str], name: str) -> str:
+    return [f for f in sibling_files if name in f][0]
 
 
 def get_node_from_func_call(fnc_call: tuple, current_file: str, graph: Node):
@@ -56,8 +68,8 @@ def get_node_from_func_call(fnc_call: tuple, current_file: str, graph: Node):
             return try_local
 
     else:
-        parent_dir = os.path.dirname(current_file)
-        sibling_files = [f for f in os.listdir(parent_dir) if f.endswith(".py")]
-        host_file = [f for f in sibling_files if file_alias in f][0]
+        parent_dir = get_parent_dir(current_file)
+        sibling_files = get_sibling_files(parent_dir)
+        host_file = get_host_file(sibling_files, file_alias)
         host_loc = os.path.join(parent_dir, host_file)
         return xfs(graph, fnc_name, host_loc)
