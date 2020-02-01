@@ -23,16 +23,19 @@ def get_fnc_calls(line: str) -> List[tuple]:
     return cleaned_output
 
 
-def get_node_from_func_call(import_path: str, function: str, current_file: str, graph: Node):
+def get_node_from_func_call(fnc_call: tuple, current_file: str, graph: Node):
     """
     A function that takes an import path like "module.file" and returns 
     a string denoting the path to the file it was imported from if it
     exists in the project, else it returns ""
     """
-    if not import_path:
-        return xfs(graph, function, current_file)
+    fnc_alias, fnc_name = fnc_call
 
-    parent_dir = os.path.dirname(current_file)
-    import_file = parent_dir + "/" + import_path + ".py"
-    
-    return xfs(graph, function, import_file)
+    if not fnc_alias:
+        return xfs(graph, fnc_name, current_file)
+    else:
+        parent_dir = os.path.dirname(current_file)
+        sibling_files = [f for f in os.listdir(parent_dir) if f.endswith(".py")]
+        host_file = [f for f in sibling_files if fnc_alias in f][0]
+        host_loc = os.path.join(parent_dir, host_file)
+        return xfs(graph, fnc_name, host_loc)

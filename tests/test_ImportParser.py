@@ -55,74 +55,34 @@ class test_get_fnc_calls(unittest.TestCase):
         output = get_fnc_calls(inpt)
         self.assertEqual(gold, output)
 
-
-# class test_get_node_from_path(unittest.TestCase):
-
-#     def test_function_in_current_file(self):
-#         test_file = "/path/to/test1.py"
-#         filenode = FileNode(test_file, "test1.py")
-#         fncnode = FncNode(test_file, "test")
-#         fncnode.parent = filenode
-#         filenode.add_child(fncnode)
-        
-#         fnc_call = ("", "test")
-#         current_file = test_file
-#         graph = filenode
-
-#         gold = fncnode
-
-#         output = get_node_from_path(fnc_call, current_file, graph)
-
-#         self.assertEqual(gold, output)
-
-#     def test_no_function_in_current_file(self):
-#         test_file = "/path/to/test1.py"
-#         filenode = FileNode(test_file, "test1.py")
-#         fncnode = FncNode(test_file, "test")
-#         fncnode.parent = filenode
-#         filenode.add_child(fncnode)
-        
-#         fnc_call = ("", "test_function")
-#         current_file = test_file
-#         graph = filenode
-
-#         gold = None
-
-#         output = get_node_from_path(fnc_call, current_file, graph)
-
-#         self.assertEqual(gold, output)
-
-
-class test_get_filepath_from_import_path(unittest.TestCase):
-
-    def test_fnc_defined_in_same_file(self):
-        test_file = "/home/kemri/Projects/pyrser/test_files/test_imports1"
-        graph = pyrser(test_file)
-        import_path = ""
-        function = "fnc"
-        current_file = test_file + "/file.py"
-
-        gold = FncNode(current_file, "fnc")
-        gold.scope = [1, 2]
-
-        output = get_node_from_func_call(import_path, function, current_file, graph)
-
+    def test_multiple_calls_no_aliases(self):
+        inpt = "fnc1(); fnc2(arg1, arg2))"
+        gold = [("", "fnc1"), ("", "fnc2")]
+        output = get_fnc_calls(inpt)
         self.assertEqual(gold, output)
 
-    def test_fnc_imported_from_file(self):
-        test_file = "/home/kemri/Projects/pyrser/test_files/test_imports1"
-        graph = pyrser(test_file)
-        import_path = "file"
-        function = "fnc"
-        current_file = test_file + "/main.py"
 
-        gold = FncNode(test_file + "/file.py", "fnc")
-        gold.scope = [1, 2]
+class test_get_node_from_func_call(unittest.TestCase):
+    """takes input from get_fnc_calls"""
 
-        output = get_node_from_func_call(import_path, function, current_file, graph)
-
+    def test_fnc_defined_in_this_file(self):
+        inpt = ("", "fnc")
+        inpt_dir = "/home/kemri/Projects/pyrser/test_files/test_imports1"
+        curr_file = inpt_dir + "/file.py"
+        graph = pyrser(inpt_dir)
+        gold = FncNode(inpt_dir + "/file.py", "fnc"); gold.scope = [1, 2]
+        output = get_node_from_func_call(inpt, curr_file, graph)
         self.assertEqual(gold, output)
 
+    def test_fnc_imported_from_sibling_file(self):
+        inpt = ("test", "fnc")
+        inpt_dir = "/home/kemri/Projects/pyrser/test_files/test_imports2"
+        curr_file = inpt_dir + "/main.py"
+        graph = pyrser(inpt_dir)
+        gold = FncNode(inpt_dir + "/test.py", "fnc"); gold.scope = [1, 2]
+        output = get_node_from_func_call(inpt, curr_file, graph)
+        self.assertEqual(gold, output)
+        
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
