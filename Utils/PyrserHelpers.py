@@ -1,59 +1,9 @@
 from Node import Node, DirNode, FileNode, ClsNode, FncNode
+from Utils.Blacklisted import line_blacklisted
 from collections import deque, defaultdict
 import os
 from typing import Tuple
 import re
-
-
-"""
-TODO: break functions that work with paths/files/dirs into separate module
-TODO: create more sophisticated blacklisting function to handle things like `.git`
-"""
-
-
-BLACKLIST_CHARS = ["__"]
-
-
-def _line_blacklisted(line: str) -> bool:
-    # TODO: convert to decorator
-
-    for chars in BLACKLIST_CHARS:
-        if chars in line:
-            return True
-    return False
-
-
-def reader(filepath: str) -> list:
-    with open(filepath, "r") as f:
-        lines = f.readlines()
-    return lines
-
-
-def is_file(path: str) -> bool:
-    return os.path.isfile(path)
-
-
-def is_dir(path: str) -> bool:
-    if _line_blacklisted(path):
-        return False
-        
-    return os.path.isdir(path)
-
-
-def list_dir(path: str):
-    for f in os.listdir(path):
-        yield(os.path.join(path, f))
-
-
-def nonempty_pyfile(path: str) -> bool:
-    if _line_blacklisted(path):
-        return False
-
-    return path.endswith(".py") and os.path.getsize(path) > 0
-
-
-def get_file_name_from_path(path: str) -> str:
-    return os.path.basename(path)
 
 
 def xfs(node: Node, tgt_nm: str = None, tgt_file: str = None, search_type: str = "dfs") -> Node:
@@ -94,7 +44,7 @@ def _process_node(node: "Node"):
 def get_obj_name(line: str) -> str:
     clean_line = line.strip()
 
-    if _line_blacklisted(line):
+    if line_blacklisted(line):
         return None
 
     no_def_found = not clean_line.startswith("def ")

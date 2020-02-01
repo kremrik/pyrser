@@ -1,7 +1,7 @@
 from Node import Node, FileNode
-from Utils.PyrserHelpers import reader, xfs
+from Utils.PyrserHelpers import xfs
+import Utils.FileHelpers as fh
 import re
-import os
 from typing import Tuple, List
 
 
@@ -34,24 +34,12 @@ def get_import_stmt(filepath: str, fnc_name: str) -> str:
 
 def get_filepath_from_import(import_stmt: str, current_file: str) -> str:
     filename = import_pattern.findall(import_stmt)[0]
-    parent_dir = get_parent_dir(current_file)
-    sibling_files = get_sibling_files(parent_dir)
-    host_file = get_host_file(sibling_files, filename)
-    host_loc = os.path.join(parent_dir, host_file)
+    parent_dir = fh.get_parent_dir(current_file)
+    sibling_files = fh.get_sibling_files(parent_dir)
+    host_file = fh.get_host_file(sibling_files, filename)
+    host_loc = fh.join_path(parent_dir, host_file)
     
     return host_loc
-
-
-def get_parent_dir(path: str) -> str:
-    return os.path.dirname(path)
-
-
-def get_sibling_files(path: str) -> List[str]:
-    return [f for f in os.listdir(path) if f.endswith(".py")]
-
-
-def get_host_file(sibling_files: List[str], name: str) -> str:
-    return [f for f in sibling_files if name in f][0]
 
 
 def get_node_from_func_call(fnc_call: tuple, current_file: str, graph: Node):
@@ -68,8 +56,8 @@ def get_node_from_func_call(fnc_call: tuple, current_file: str, graph: Node):
             return try_local
 
     else:
-        parent_dir = get_parent_dir(current_file)
-        sibling_files = get_sibling_files(parent_dir)
-        host_file = get_host_file(sibling_files, file_alias)
-        host_loc = os.path.join(parent_dir, host_file)
+        parent_dir = fh.get_parent_dir(current_file)
+        sibling_files = fh.get_sibling_files(parent_dir)
+        host_file = fh.get_host_file(sibling_files, file_alias)
+        host_loc = fh.join_path(parent_dir, host_file)
         return xfs(graph, fnc_name, host_loc)

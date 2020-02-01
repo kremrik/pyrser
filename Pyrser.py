@@ -1,7 +1,6 @@
 from Node import Node, DirNode, FileNode, ClsNode, FncNode
-from Utils.PyrserHelpers import reader, is_file, get_file_name_from_path, get_obj_name, \
-    get_node_type, get_next_nonempty_line, xfs, get_fnc_calls, get_fnc_from_line, is_dir, \
-    list_dir, nonempty_pyfile  # TODO: convert to alias
+import Utils.FileHelpers as fh
+from Utils.PyrserHelpers import get_obj_name, get_node_type, get_next_nonempty_line, xfs, get_fnc_calls, get_fnc_from_line  # TODO: convert to alias
 
 
 INDENT = "    "
@@ -11,13 +10,13 @@ def pyrser(path: str) -> Node:
     # TODO/BUG: can't call add_calls on single file for is_dir, need to
     # call on entire directory somehow
 
-    if is_dir(path):
+    if fh.is_dir(path):
         output_with_calls = dir_parser(path)
 
-    if is_file(path):
-        name = get_file_name_from_path(path)
+    if fh.is_file(path):
+        name = fh.get_file_name_from_path(path)
 
-        lines = reader(path)
+        lines = fh.reader(path)
         length = len(lines) - 1
         output, _ = file_parser(FileNode, path, name, lines, length)  # TODO: eliminate useless second return value
         
@@ -27,13 +26,13 @@ def pyrser(path: str) -> Node:
 
 
 def dir_parser(path: str) -> Node:
-    name = get_file_name_from_path(path)
+    name = fh.get_file_name_from_path(path)
     dirnode = DirNode(path, name)
 
-    for f in list_dir(path):
-        if nonempty_pyfile(f):
-            f_name = get_file_name_from_path(f)
-            lines = reader(f)
+    for f in fh.list_dir(path):
+        if fh.nonempty_pyfile(f):
+            f_name = fh.get_file_name_from_path(f)
+            lines = fh.reader(f)
             length = len(lines) - 1
             output, _ = file_parser(FileNode, f, f_name, lines, length)  # TODO: eliminate useless second return value
 
@@ -41,7 +40,7 @@ def dir_parser(path: str) -> Node:
             output.parent = dirnode
             dirnode.add_child(output)
 
-        if is_dir(f):
+        if fh.is_dir(f):
             child_dir = dir_parser(f)
             child_dir.parent = dirnode
             dirnode.add_child(child_dir)
@@ -105,14 +104,14 @@ def file_parser(node, location: str, name: str, lines: list, length: int, place:
 
 
 def add_calls(node: Node, lines: list) -> Node:
-    # filename = node.location
+    filename = node.location
 
-    # for place, line in enumerate(lines):
-    #     if calls := get_fnc_calls(line):
-    #         for call in calls:
-    #             if called_node := xfs(node=node, tgt_nm=call, tgt_file=node.location):
-    #                 parent_fnc_name = get_fnc_from_line(lines, place)
-    #                 parent_fnc = xfs(node=node, tgt_nm=parent_fnc_name, tgt_file=node.location)
-    #                 parent_fnc.add_call(called_node)
+    for place, line in enumerate(lines):
+        if calls := get_fnc_calls(line):
+            for call in calls:
+                if called_node := xfs(node=node, tgt_nm=call, tgt_file=node.location):
+                    parent_fnc_name = get_fnc_from_line(lines, place)
+                    parent_fnc = xfs(node=node, tgt_nm=parent_fnc_name, tgt_file=node.location)
+                    parent_fnc.add_call(called_node)
 
     return node
