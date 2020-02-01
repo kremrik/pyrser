@@ -1,0 +1,2 @@
+def fnc():
+    print("hello")
