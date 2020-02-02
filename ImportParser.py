@@ -7,7 +7,8 @@ from typing import Tuple, List
 
 # https://stackoverflow.com/questions/9018947/regex-string-with-optional-parts
 fnc_call_pattern = re.compile('(?P<location>[a-zA-Z0-9_.]+?\.)?(?P<call>[a-zA-Z0-9_]+?)\(')
-import_pattern = re.compile(r"from ([a-zA-Z0-9_]*) import")
+from_file_import_function = re.compile(r"from ([a-zA-Z0-9_]*) import")
+import_file = re.compile(r"import ([a-zA-Z0-9_]*)$")
 
 
 def get_fnc_calls(line: str) -> List[tuple]:
@@ -25,6 +26,7 @@ def get_fnc_calls(line: str) -> List[tuple]:
 
 
 def get_import_stmt(filepath: str, fnc_name: str) -> str:
+    # TODO: refactor to use the reader in `fh`
     with open(filepath, "r") as f:
         for line in f:
             if fnc_name in line and "import" in line:
@@ -33,7 +35,8 @@ def get_import_stmt(filepath: str, fnc_name: str) -> str:
 
 
 def get_filepath_from_import(import_stmt: str, current_file: str) -> str:
-    filename = import_pattern.findall(import_stmt)[0]
+    filename = from_file_import_function.findall(import_stmt) or import_file.findall(import_stmt)
+    filename = filename[0]
     parent_dir = fh.get_parent_dir(current_file)
     sibling_files = fh.get_sibling_files(parent_dir)
     host_file = fh.get_host_file(sibling_files, filename)

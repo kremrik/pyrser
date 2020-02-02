@@ -80,7 +80,7 @@ class test_parse_import_stmt(unittest.TestCase):
         gold = "/home/kemri/Projects/pyrser/test_files/test_imports3/test.py"
         output = get_filepath_from_import(import_stmt, current_file)
         self.assertEqual(gold, output)
-        
+
 
 class test_get_node_from_func_call(unittest.TestCase):
     """takes input from get_fnc_calls"""
@@ -110,6 +110,23 @@ class test_get_node_from_func_call(unittest.TestCase):
         graph = pyrser(inpt_dir)
         gold = FncNode(inpt_dir + "/test.py", "fnc"); gold.scope = [1, 2]
         output = get_node_from_func_call(inpt, curr_file, graph)
+        self.assertEqual(gold, output)
+
+
+class test_get_filepath_from_import(unittest.TestCase):
+
+    def test_import_sibling_fnc(self):
+        current_file = "/home/kemri/Projects/pyrser/test_files/test_imports3/main.py"
+        import_stmt = "from test import fnc"
+        gold = "/home/kemri/Projects/pyrser/test_files/test_imports3/test.py"
+        output = get_filepath_from_import(import_stmt, current_file)
+        self.assertEqual(gold, output)
+    
+    def test_import_sibling_file(self):
+        current_file = "/home/kemri/Projects/pyrser/test_files/test_imports2/main.py"
+        import_stmt = "import test"
+        gold = "/home/kemri/Projects/pyrser/test_files/test_imports2/test.py"
+        output = get_filepath_from_import(import_stmt, current_file)
         self.assertEqual(gold, output)
         
 
