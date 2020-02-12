@@ -14,8 +14,15 @@ def xfs(node: Node, tgt_nm: str = None, tgt_file: str = None, search_type: str =
     while stack:
         vertex = stack.pop()
 
-        if vertex.name == tgt_nm and vertex.location == tgt_file:
-            return vertex
+        if tgt_nm and tgt_file:
+            if vertex.name == tgt_nm and vertex.location == tgt_file:
+                return vertex
+        elif tgt_nm and not tgt_file:
+            if vertex.name == tgt_nm:
+                return vertex
+        elif not tgt_nm and tgt_file:
+            if vertex.location == tgt_file:
+                return vertex
 
         if vertex not in visited:
             visited.append(vertex)
