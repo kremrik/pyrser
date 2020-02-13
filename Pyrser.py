@@ -1,6 +1,7 @@
 from Node import Node, DirNode, FileNode, ClsNode, FncNode
 import Utils.FileHelpers as fh
 from Utils.PyrserHelpers import get_obj_name, get_node_type, get_next_nonempty_line, xfs, get_fnc_calls, get_fnc_from_line  # TODO: convert to alias
+import ImportParser as ip
 
 
 INDENT = "    "
@@ -20,7 +21,8 @@ def pyrser(path: str) -> Node:
         length = len(lines) - 1
         output, _ = file_parser(FileNode, path, name, lines, length)  # TODO: eliminate useless second return value
         
-        output_with_calls = add_calls(output, lines)
+        # output_with_calls = add_calls(output, lines)
+        output_with_calls = output
         
     return output_with_calls
 
@@ -36,7 +38,7 @@ def dir_parser(path: str) -> Node:
             length = len(lines) - 1
             output, _ = file_parser(FileNode, f, f_name, lines, length)  # TODO: eliminate useless second return value
 
-            output_with_calls = add_calls(output, lines)
+            # output_with_calls = add_calls(output, lines)
             output.parent = dirnode
             dirnode.add_child(output)
 
@@ -103,15 +105,15 @@ def file_parser(node, location: str, name: str, lines: list, length: int, place:
     return node, place
 
 
-def add_calls(node: Node, lines: list) -> Node:
-    filename = node.location
-
-    for place, line in enumerate(lines):
-        if calls := get_fnc_calls(line):
-            for call in calls:
-                if called_node := xfs(node=node, tgt_nm=call, tgt_file=node.location):
-                    parent_fnc_name = get_fnc_from_line(lines, place)
-                    parent_fnc = xfs(node=node, tgt_nm=parent_fnc_name, tgt_file=node.location)
-                    parent_fnc.add_call(called_node)
-
-    return node
+def add_calls(graph: Node):
+    """
+    1. Scan graph for FileNode
+    2. When FileNode found, open file
+    3. Iterate through file line-by-line
+        If function call found, use ``get_fnc_from_line`` to get its "home" function,
+        and then query graph with ``xfs`` and tgt_nm and file_nm params
+    4. query graph with name of function called in (3)
+        If found, add to (3)'s "home" function node
+        Else, pass
+    """
+    pass

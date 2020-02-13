@@ -1,9 +1,10 @@
 from Node import Node, FileNode
 from Utils.PyrserHelpers import xfs
 import Utils.FileHelpers as fh
-import re
+
 from typing import Tuple, List
 from functools import lru_cache
+import re
 
 
 # https://stackoverflow.com/questions/9018947/regex-string-with-optional-parts
