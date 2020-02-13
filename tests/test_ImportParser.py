@@ -7,7 +7,7 @@ sys.path.insert(0, pwd)
 from Pyrser import pyrser
 from Utils.PyrserHelpers import xfs
 from Node import Node, DirNode, FileNode, ClsNode, FncNode
-from ImportParser import get_fnc_calls, create_possible_import_path
+from ImportParser import get_fnc_calls, get_import_stmt
 import unittest
 
 
@@ -69,27 +69,6 @@ class test_get_import_stmt(unittest.TestCase):
         fnc_name = "fnc"
         gold = "from test import fnc"
         output = get_import_stmt(inpt_dir, fnc_name)
-        self.assertEqual(gold, output)
-
-
-class test_create_possible_import_path(unittest.TestCase):
-
-    def test_import_file(self):
-        import_stmt = "import file"
-        cur_loc = "/path/to/main.py"
-        gold = ("/path/to/file.py")
-        
-        output = create_possible_import_path(import_stmt, cur_loc)
-
-        self.assertEqual(gold, output)
-
-    def test_import_file(self):
-        import_stmt = "import file1.file2"
-        cur_loc = "/path/to/main.py"
-        gold = ("/path/to/file.py")
-        
-        output = create_possible_import_path(import_stmt, cur_loc)
-
         self.assertEqual(gold, output)
 
 
