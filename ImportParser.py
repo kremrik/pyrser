@@ -3,6 +3,7 @@ from Utils.PyrserHelpers import xfs
 import Utils.FileHelpers as fh
 import re
 from typing import Tuple, List
+from functools import lru_cache
 
 
 # https://stackoverflow.com/questions/9018947/regex-string-with-optional-parts
@@ -25,6 +26,7 @@ def get_fnc_calls(line: str) -> List[tuple]:
     return cleaned_output
 
 
+@lru_cache(maxsize=None)
 def get_import_stmt(filepath: str, fnc_name: str) -> str:
     # TODO: refactor to use the reader in `fh`
     with open(filepath, "r") as f:
