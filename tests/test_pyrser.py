@@ -16,7 +16,6 @@ def printer(*x):
     print()
 
 
-@unittest.skip("skipping")
 class test_pyrser(unittest.TestCase):
 
     def test_empty_file(self):
@@ -272,8 +271,8 @@ class test_add_calls(unittest.TestCase):
         input_graph = pyrser("/home/kemri/Projects/pyrser/test_files/test_imports4")
 
         gold_graph = pyrser("/home/kemri/Projects/pyrser/test_files/test_imports4")
-        called_node = xfs(gold_graph, tgt_nm="fnc")
-        caller_node = xfs(gold_graph, tgt_nm="main")
+        called_node = xfs(gold_graph, tgt_node=FncNode, tgt_nm="fnc")
+        caller_node = xfs(gold_graph, tgt_node=FncNode, tgt_nm="main")
         caller_node.add_call(called_node)
 
         add_calls(input_graph)

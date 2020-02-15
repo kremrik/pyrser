@@ -12,7 +12,7 @@ def pyrser(path: str) -> Node:
     # call on entire directory somehow
 
     if fh.is_dir(path):
-        output_with_calls = dir_parser(path)
+        output = dir_parser(path)
 
     if fh.is_file(path):
         name = fh.get_file_name_from_path(path)
@@ -21,10 +21,9 @@ def pyrser(path: str) -> Node:
         length = len(lines) - 1
         output, _ = file_parser(FileNode, path, name, lines, length)  # TODO: eliminate useless second return value
         
-        # output_with_calls = add_calls(output, lines)
-        output_with_calls = output
-        
-    return output_with_calls
+    add_calls(output)
+    
+    return output
 
 
 def dir_parser(path: str) -> Node:
@@ -38,7 +37,6 @@ def dir_parser(path: str) -> Node:
             length = len(lines) - 1
             output, _ = file_parser(FileNode, f, f_name, lines, length)  # TODO: eliminate useless second return value
 
-            # output_with_calls = add_calls(output, lines)
             output.parent = dirnode
             dirnode.add_child(output)
 
@@ -106,28 +104,13 @@ def file_parser(node, location: str, name: str, lines: list, length: int, place:
 
 
 def add_calls(graph: Node):
-    """
-    1. Scan graph for FileNode
-    2. When FileNode found, open file
-    3. Iterate through file line-by-line
-        If function call found, use ``get_fnc_from_line`` to get its "home" function,
-        and then query graph with ``xfs`` and tgt_nm and file_nm params
-    4. query graph with name of function called in (3)
-        If found, add to (3)'s "home" function node
-        Else, pass
-    """
     for node in [n for n in graph if type(n) == FileNode]:
         filepath = node.location
         lines = fh.reader(filepath)
 
         for place, line in enumerate(lines):
             if fnc_call := get_fnc_calls(line):  # if this line calls a function...
-                # if fnc_call[0] == "dir_parser": print(f"fnc_call: {fnc_call}, line: {line.strip()}")
-                if fnc_node := xfs(graph, tgt_nm=fnc_call[0]):  # if called function in graph...
-                    # if fnc_call[0] == "dir_parser": print(f"fnc_node: {fnc_node}")
+                if fnc_node := xfs(graph, tgt_node=FncNode, tgt_nm=fnc_call[0]):  # if called function in graph...
                     call_owner = get_fnc_from_line(lines, place)  # get the name of function calling fnc_node
-                    # if fnc_call[0] == "dir_parser": print(f"call_owner: {call_owner}")
-                    caller_node = xfs(graph, tgt_nm=call_owner)  # get the node of the function calling fnc_node
-                    # if fnc_call[0] == "dir_parser": print(f"caller_node: {caller_node}")
-                    if type(caller_node) == FncNode:
-                        caller_node.add_call(fnc_node)
+                    caller_node = xfs(graph, tgt_node=FncNode, tgt_nm=call_owner)  # get the node of the function calling fnc_node
+                    caller_node.add_call(fnc_node)
