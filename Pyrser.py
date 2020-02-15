@@ -122,7 +122,12 @@ def add_calls(graph: Node):
 
         for place, line in enumerate(lines):
             if fnc_call := get_fnc_calls(line):  # if this line calls a function...
+                # if fnc_call[0] == "dir_parser": print(f"fnc_call: {fnc_call}, line: {line.strip()}")
                 if fnc_node := xfs(graph, tgt_nm=fnc_call[0]):  # if called function in graph...
+                    # if fnc_call[0] == "dir_parser": print(f"fnc_node: {fnc_node}")
                     call_owner = get_fnc_from_line(lines, place)  # get the name of function calling fnc_node
+                    # if fnc_call[0] == "dir_parser": print(f"call_owner: {call_owner}")
                     caller_node = xfs(graph, tgt_nm=call_owner)  # get the node of the function calling fnc_node
-                    caller_node.add_call(fnc_node)
+                    # if fnc_call[0] == "dir_parser": print(f"caller_node: {caller_node}")
+                    if type(caller_node) == FncNode:
+                        caller_node.add_call(fnc_node)

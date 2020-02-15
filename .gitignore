@@ -5,4 +5,4 @@ viz/.ipynb_checkpoints/
 Utils/__pycache__/
 .coverage
 main.py
-viz/*.ipynb
+# viz/*.ipynb
