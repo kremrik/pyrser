@@ -34,7 +34,7 @@ FileNode(name='example.py', scope=[1, 16], location=test_files/example.py)
  |-- FncNode(name='test_it_out', scope=[14, 16], calls=['is_yoda'])
 ```
 
-Pyser creates a simple graph with `children` and `parent` attributes for each node that allow you to traverse the graph in either direction from wherever you are. Additionally, `scope` describes the lines each node encompasses (for example, ``test_it_out`` is defined from line 14 to 16 in ``example.py``). The ``viz`` directory contains a Jupyter notebook containing functions that generate an image like below:
+Pyrser creates a simple graph with `children` and `parent` attributes for each node that allow you to traverse the graph in either direction from wherever you are. Additionally, `scope` describes the lines each node encompasses (for example, ``test_it_out`` is defined from line 14 to 16 in ``example.py``). The ``viz`` directory contains a Jupyter notebook containing functions that generate an image like below:
 
 ![Alt text](images/example.png "example.png")
 
@@ -42,6 +42,9 @@ Pyser creates a simple graph with `children` and `parent` attributes for each no
 So far, we have the basic groundwork completed:
 - Ability to serialize a .py file into a custom graph
 - Ability to visualize a .py file's calls with graphviz
+
+### What's next on the TODO list?
+- see the [issues](https://github.com/kremrik/pyrser/issues) page
 
 ### Where are we going (aka, wish list)
 - readthedocs sphinx documentation
