@@ -116,4 +116,13 @@ def add_calls(graph: Node):
         If found, add to (3)'s "home" function node
         Else, pass
     """
-    pass
+    for node in [n for n in graph if type(n) == FileNode]:
+        filepath = node.location
+        lines = fh.reader(filepath)
+
+        for place, line in enumerate(lines):
+            if fnc_call := get_fnc_calls(line):  # if this line calls a function...
+                if fnc_node := xfs(graph, tgt_nm=fnc_call[0]):  # if called function in graph...
+                    call_owner = get_fnc_from_line(lines, place)  # get the name of function calling fnc_node
+                    caller_node = xfs(graph, tgt_nm=call_owner)  # get the node of the function calling fnc_node
+                    caller_node.add_call(fnc_node)

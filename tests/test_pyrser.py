@@ -4,8 +4,9 @@ import sys
 pwd = str(Path(".").absolute())
 sys.path.insert(0, pwd)
 
-from Pyrser import pyrser
+from Pyrser import pyrser, add_calls
 from Node import DirNode, FileNode, ClsNode, FncNode
+from Utils.PyrserHelpers import xfs
 import unittest
 
 
@@ -15,6 +16,7 @@ def printer(*x):
     print()
 
 
+@unittest.skip("skipping")
 class test_pyrser(unittest.TestCase):
 
     def test_empty_file(self):
@@ -262,6 +264,21 @@ class test_pyrser(unittest.TestCase):
         output = pyrser(directory)
 
         self.assertEqual(output, gold)
+
+
+class test_add_calls(unittest.TestCase):
+
+    def test_simple_graph(self):
+        input_graph = pyrser("/home/kemri/Projects/pyrser/test_files/test_imports4")
+
+        gold_graph = pyrser("/home/kemri/Projects/pyrser/test_files/test_imports4")
+        called_node = xfs(gold_graph, tgt_nm="fnc")
+        caller_node = xfs(gold_graph, tgt_nm="main")
+        caller_node.add_call(called_node)
+
+        add_calls(input_graph)
+
+        self.assertEqual(gold_graph, input_graph)
 
 
 if __name__ == "__main__":
