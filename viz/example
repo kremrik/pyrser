@@ -8,6 +8,5 @@ digraph {
 		test_it_out [shape=box]
 		label="example.py"
 	}
-	test_it_out -> Person
 	test_it_out -> is_yoda
 }

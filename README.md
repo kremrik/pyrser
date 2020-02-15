@@ -28,20 +28,20 @@ from Pyrser import pyrser
 graph = pyrser("example.py")
 
 graph
-FileNode(name='example.py', scope=[1, 16], location=/path/to/example.py)
+FileNode(name='example.py', scope=[1, 16], location=test_files/example.py)
  |-- ClsNode(name='Person', scope=[1, 11])
  |    |-- FncNode(name='is_yoda', scope=[7, 11], calls=[])
- |-- FncNode(name='test_it_out', scope=[14, 16], calls=['Person', 'is_yoda'])
+ |-- FncNode(name='test_it_out', scope=[14, 16], calls=['is_yoda'])
 ```
 
-Pyser creates a simple graph with `children` and `parent` attributes for each node that allow you to traverse the graph in either direction from wherever you are. Additionally, `scope` describes the lines each node encompasses (for example, ``test_it_out`` is defined from line 14 to 16 in ``example.py``) The presence of the instantiation call to ``Person`` is an open issue. There is functionality in the works to produce a graphviz representation of this graph, which would generate an image like below:
+Pyser creates a simple graph with `children` and `parent` attributes for each node that allow you to traverse the graph in either direction from wherever you are. Additionally, `scope` describes the lines each node encompasses (for example, ``test_it_out`` is defined from line 14 to 16 in ``example.py``). The ``viz`` directory contains a Jupyter notebook containing functions that generate an image like below:
 
 ![Alt text](images/example.png "example.png")
 
 ### Where are we at?
 So far, we have the basic groundwork completed:
 - Ability to serialize a .py file into a custom graph
-- Ability to visualize a .py file's calls with graphviz (but ONLY for functions defined in the same file)
+- Ability to visualize a .py file's calls with graphviz
 
 ### Where are we going (aka, wish list)
 - readthedocs sphinx documentation
