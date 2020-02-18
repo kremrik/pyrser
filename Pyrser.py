@@ -104,6 +104,8 @@ def file_parser(node, location: str, name: str, lines: list, length: int, place:
 
 
 def add_calls(graph: Node):
+    # PYRAMID OF DOOM BELOW
+    
     for node in [n for n in graph if type(n) == FileNode]:
         filepath = node.location
         lines = fh.reader(filepath)
@@ -111,6 +113,9 @@ def add_calls(graph: Node):
         for place, line in enumerate(lines):
             if fnc_call := get_fnc_calls(line):  # if this line calls a function...
                 if fnc_node := xfs(graph, tgt_node=FncNode, tgt_nm=fnc_call[0]):  # if called function in graph...
-                    call_owner = get_fnc_from_line(lines, place)  # get the name of function calling fnc_node
-                    caller_node = xfs(graph, tgt_node=FncNode, tgt_nm=call_owner)  # get the node of the function calling fnc_node
-                    caller_node.add_call(fnc_node)
+                    if not line.startswith(INDENT):
+                        node.add_call(fnc_node)
+                    else:
+                        call_owner = get_fnc_from_line(lines, place)  # get the name of function calling fnc_node
+                        caller_node = xfs(graph, tgt_node=FncNode, tgt_nm=call_owner)  # get the node of the function calling fnc_node
+                        caller_node.add_call(fnc_node)

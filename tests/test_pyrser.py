@@ -279,6 +279,17 @@ class test_add_calls(unittest.TestCase):
 
         self.assertEqual(gold_graph, input_graph)
 
+    def test_with_fnc_call_at_file_level(self):
+        input_graph = pyrser("/home/kemri/Projects/pyrser/test_files/test7.py")
+
+        gold_graph = pyrser("/home/kemri/Projects/pyrser/test_files/test7.py")
+        called_node = xfs(gold_graph, tgt_node=FncNode, tgt_nm="test")
+        gold_graph.add_call(called_node)
+
+        add_calls(input_graph)
+
+        self.assertEqual(gold_graph, input_graph)
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

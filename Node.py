@@ -63,6 +63,10 @@ class FileNode(Node):
     def __init__(self, location, name):
         super().__init__(location, name)
         self.scope = None
+        self.calls = []
+
+    def add_call(self, call: "FncNode"):
+        self.calls.append(call)
     
     def __eq__(self, other):
         return self.location == other.location and \
@@ -75,8 +79,9 @@ class FileNode(Node):
         name = self.name
         scope = self.scope
         loc = self.location
+        calls = [call.name for call in self.calls]
 
-        return f"{cls_nm}(name='{name}', scope={scope}, location={loc})"
+        return f"{cls_nm}(name='{name}', scope={scope}, calls={calls}, location={loc})"
 
 
 class ClsNode(FileNode):
