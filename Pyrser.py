@@ -8,9 +8,6 @@ INDENT = "    "
 
 
 def pyrser(path: str) -> Node:
-    # TODO/BUG: can't call add_calls on single file for is_dir, need to
-    # call on entire directory somehow
-
     if fh.is_dir(path):
         output = dir_parser(path)
 

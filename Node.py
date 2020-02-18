@@ -3,8 +3,6 @@ from Utils.NodeHelpers import dfs_printer
 
 class Node(object):
 
-    # TODO: implement iter, and use dfs to yield each node
-
     def __init__(self, location: str, name: str):
         self.location = location
         self.name = name
